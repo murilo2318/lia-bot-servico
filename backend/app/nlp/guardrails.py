@@ -1,0 +1,80 @@
+"""Guardrails em código — não dependem de o LLM obedecer ao prompt.
+
+Entrada: tamanho, tentativa de prompt injection e pedido para fazer a
+atividade pelo aluno. Saída: vazamento do prompt, promessas indevidas
+(nota, prazo, contato) e tamanho máximo.
+"""
+import re
+from dataclasses import dataclass
+
+from app.nlp.text import normalize_text
+
+# --- entrada -----------------------------------------------------------
+INJECTION = [
+    r"\b(ignor\w*|esquec\w*|desconsider\w*|descart\w*)\b.{0,40}\b(instruc\w*|regras?|prompt|orientac\w*|diretriz\w*)",
+    r"\b(mostr\w*|revel\w*|repit\w*|exib\w*|imprim\w*|copi\w*|diga|conte|passa\w*|qual e)\b.{0,30}\b(seu|teu|suas|tuas)\s+(proprio\s+|proprias\s+)?(system prompt|prompt|instruc\w*|regras)",
+    r"\b(voce agora e|a partir de agora voce|finja que|faca de conta que|aja como|atue como|roleplay)\b",
+    r"\b(modo (desenvolvedor|dev|admin|deus)|jailbreak|dan mode|sem restric\w*|sem filtro)\b",
+    r"\b(ignore (all|previous)|developer mode)\b",
+]
+PEDIDO_INDEVIDO = [
+    r"\b(faca|faz|resolve|resolva|escreve|escreva|monta|monte|entrega|termina|termine)\b.{0,30}\b(meu|minha|o|a|nosso|nossa)?\s*(trabalho|atividade|checkpoint|cp|prova|exercicio|tarefa|entrega|codigo do (cp|trabalho))\b",
+    r"\b(me )?(passa|manda|da|de)\b.{0,15}\b(as )?respostas?\b.{0,20}\b(prova|atividade|checkpoint|exercicio)",
+    r"\b(cola|gabarito)\b",
+]
+
+
+@dataclass
+class GuardrailResult:
+    bloqueado: bool
+    tipo: str | None = None   # tamanho | prompt_injection | pedido_indevido | saida_*
+    motivo: str | None = None
+
+
+def checar_entrada(texto: str, max_chars: int) -> GuardrailResult:
+    if not texto.strip():
+        return GuardrailResult(True, "vazio", "mensagem vazia")
+    if len(texto) > max_chars:
+        return GuardrailResult(True, "tamanho", f"{len(texto)} caracteres (> {max_chars})")
+    t = normalize_text(texto)
+    for padrao in INJECTION:
+        if re.search(padrao, t):
+            return GuardrailResult(True, "prompt_injection", padrao[:40])
+    for padrao in PEDIDO_INDEVIDO:
+        if re.search(padrao, t):
+            return GuardrailResult(True, "pedido_indevido", padrao[:40])
+    return GuardrailResult(False)
+
+
+# --- saída -------------------------------------------------------------
+VAZAMENTO = [
+    r"contexto da faq", r"objetivo de aprendizagem:", r"\bcamada \d\b", r"papel e persona",
+    r"regras e guardrails", r"system prompt v\d", r"voce e a lia, assistente virtual da oficina",
+]
+PROMESSA = [
+    r"\b(garanto|prometo|vou garantir)\b",
+    r"\b(vou|irei|posso)\b.{0,20}\b(te dar|aumentar|mudar|alterar|revisar)\b.{0,15}\bnota\b",
+    r"\bprazo\b.{0,30}\b(prorrogad\w*|estendid\w*|adiad\w*)\b",
+    r"\b(vou|irei|ja)\b.{0,15}\b(contatar|chamar|avisar|mandar mensagem|enviar e mail)\b.{0,20}\b(professor|professora)\b",
+    r"\bvoce (esta|foi|vai ser) aprovad[oa]\b",
+]
+
+
+def checar_saida(texto: str, max_chars: int) -> tuple[str, GuardrailResult]:
+    """Devolve o texto final e o resultado do guardrail de saída."""
+    t = normalize_text(texto)
+    for padrao in VAZAMENTO:
+        if re.search(padrao, t):
+            return "", GuardrailResult(True, "saida_vazamento", padrao)
+    for padrao in PROMESSA:
+        if re.search(padrao, t):
+            return "", GuardrailResult(True, "saida_promessa", padrao)
+    if len(texto) > max_chars:
+        return _cortar_em_frase(texto, max_chars), GuardrailResult(False, "saida_tamanho", f"cortado de {len(texto)}")
+    return texto, GuardrailResult(False)
+
+
+def _cortar_em_frase(texto: str, limite: int) -> str:
+    trecho = texto[:limite]
+    fim = max(trecho.rfind(". "), trecho.rfind("! "), trecho.rfind("? "))
+    return trecho[: fim + 1] if fim > limite // 3 else trecho.rstrip() + "…"

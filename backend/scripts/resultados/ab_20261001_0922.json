@@ -1,0 +1,353 @@
+{
+  "data": "2026-10-01 09:20",
+  "api": "http://localhost:8000",
+  "juiz": null,
+  "variantes": {
+    "v2": {
+      "resumo": {
+        "conversas": 4,
+        "turnos": 17,
+        "taxa_contencao": 1.0,
+        "taxa_fallback": 0.1765,
+        "taxa_handoff": 0.0,
+        "mensagens_por_conversa": 4.25,
+        "acerto_roteiro": 0.8571,
+        "acerto_parafrases": 0.5,
+        "nlu_pelo_llm": 1,
+        "latencia_media_ms": 1491,
+        "latencia_p95_ms": 3175,
+        "erros_http": 0,
+        "juiz": null
+      },
+      "conversas": [
+        {
+          "id": "T1",
+          "titulo": "Caminho feliz: agendar plantão",
+          "session_id": "6ffa5995532d",
+          "saudacao": "Oi! Eu sou a Lia, assistente virtual da oficina de chatbots. Posso tirar dúvidas sobre os temas da aula, agendar um plantão de dúvidas com o professor ou chamar o professor quando você precisar. Não faço a atividade por você, mas te ajudo a entender cada parte. Vi que seu objetivo é memória e estado. Qual é a sua dúvida?",
+          "informativa": false,
+          "erros": [],
+          "checagens": [
+            {
+              "regra": [
+                "final",
+                "intent",
+                "confirmar_agendamento"
+              ],
+              "ok": true
+            },
+            {
+              "regra": [
+                "final",
+                "handoff.active",
+                false
+              ],
+              "ok": true
+            }
+          ],
+          "transcricao": [
+            {
+              "usuario": "quero agendar um plantão de dúvidas",
+              "lia": "Vamos agendar seu plantão de dúvidas com o professor. Qual é o seu nome completo?",
+              "intent": "agendar_plantao",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 4,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "Marina Alves",
+              "lia": "Obrigada, Marina. Qual é o seu RM?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 3,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "562358",
+              "lia": "Anotado. Qual e-mail devo usar para enviar o link do plantão?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 6,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "marina.alves@fiap.com.br",
+              "lia": "Tenho estes horários com o professor: (1) terça 06/10 às 18h, (2) terça 06/10 às 19h, (3) quarta 07/10 às 17h30. Qual prefere?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 5,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "2",
+              "lia": "Confere: plantão em terça 06/10 às 19h, para Marina Alves (RM 562358), tema memória e estado, com o link enviado para marina.alves@fiap.com.br. Posso confirmar?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 2,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "sim",
+              "lia": "Agendado! Plantão com o Prof. Fernando em terça 06/10 às 19h, protocolo PL-6FFA-P2. O link vai para marina.alves@fiap.com.br. Posso ajudar em mais algo?",
+              "intent": "confirmar_agendamento",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 3,
+              "nlu_origem": "regra",
+              "guardrail": null
+            }
+          ]
+        },
+        {
+          "id": "T6",
+          "titulo": "Pergunta fora da base",
+          "session_id": "cc16dc95942c",
+          "saudacao": "Oi! Eu sou a Lia, assistente virtual da oficina de chatbots. Posso tirar dúvidas sobre os temas da aula, agendar um plantão de dúvidas com o professor ou chamar o professor quando você precisar. Não faço a atividade por você, mas te ajudo a entender cada parte. Por onde quer começar?",
+          "informativa": false,
+          "erros": [],
+          "checagens": [
+            {
+              "regra": [
+                "final",
+                "fallback",
+                true
+              ],
+              "ok": true
+            },
+            {
+              "regra": [
+                "final",
+                "intent",
+                "fora_da_base"
+              ],
+              "ok": false
+            }
+          ],
+          "transcricao": [
+            {
+              "usuario": "como faço deploy do bot no WhatsApp?",
+              "lia": "Não tenho certeza de que entendi. Posso te ajudar a (1) tirar dúvidas sobre os temas da oficina, (2) agendar um plantão de dúvidas com o professor ou (3) chamar o professor. O que você precisa?",
+              "intent": "nao_entendi",
+              "route": "fallback",
+              "fallback": true,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 3175,
+              "nlu_origem": "regra",
+              "guardrail": null
+            }
+          ]
+        },
+        {
+          "id": "E2",
+          "titulo": "Paráfrase que as regras não pegam",
+          "session_id": "86ac6a95da27",
+          "saudacao": "Oi! Eu sou a Lia, assistente virtual da oficina de chatbots. Posso tirar dúvidas sobre os temas da aula, agendar um plantão de dúvidas com o professor ou chamar o professor quando você precisar. Não faço a atividade por você, mas te ajudo a entender cada parte. Vi que seu objetivo é memória e estado. Qual é a sua dúvida?",
+          "informativa": true,
+          "erros": [],
+          "checagens": [
+            {
+              "regra": [
+                "turno",
+                0,
+                "faq_id",
+                "memory-window"
+              ],
+              "ok": true
+            },
+            {
+              "regra": [
+                "final",
+                "faq_id",
+                "knowledge-base"
+              ],
+              "ok": false
+            }
+          ],
+          "transcricao": [
+            {
+              "usuario": "como faço o bot não perder o fio do que eu falei antes?",
+              "lia": "Não tenho certeza de que entendi. Posso te ajudar a (1) tirar dúvidas sobre os temas da oficina, (2) agendar um plantão de dúvidas com o professor ou (3) chamar o professor. O que você precisa?",
+              "intent": "nao_entendi",
+              "route": "fallback",
+              "fallback": true,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 18586,
+              "nlu_origem": "llm",
+              "guardrail": null
+            },
+            {
+              "usuario": "e como evitar que o bot invente resposta?",
+              "lia": "Ainda não consegui entender o que você precisa. Quer que eu passe sua dúvida para o professor, com o resumo da nossa conversa? Responda sim ou não.",
+              "intent": "nao_entendi",
+              "route": "fallback",
+              "fallback": true,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 1772,
+              "nlu_origem": "regra",
+              "guardrail": null
+            }
+          ]
+        },
+        {
+          "id": "E3",
+          "titulo": "Consulta a agenda e agenda com e-mail errado",
+          "session_id": "bc306da086fa",
+          "saudacao": "Oi! Eu sou a Lia, assistente virtual da oficina de chatbots. Posso tirar dúvidas sobre os temas da aula, agendar um plantão de dúvidas com o professor ou chamar o professor quando você precisar. Não faço a atividade por você, mas te ajudo a entender cada parte. Vi que seu objetivo é system prompt. Qual é a sua dúvida?",
+          "informativa": false,
+          "erros": [],
+          "checagens": [
+            {
+              "regra": [
+                "turno",
+                0,
+                "route",
+                "ferramenta"
+              ],
+              "ok": true
+            },
+            {
+              "regra": [
+                "turno",
+                4,
+                "intent",
+                "dado_invalido"
+              ],
+              "ok": true
+            },
+            {
+              "regra": [
+                "final",
+                "intent",
+                "confirmar_agendamento"
+              ],
+              "ok": true
+            }
+          ],
+          "transcricao": [
+            {
+              "usuario": "tem horário de plantão na quarta?",
+              "lia": "Os horários livres de plantão são: terça 06/10 às 18h, terça 06/10 às 19h, quarta 07/10 às 17h30, quinta 08/10 às 18h, quinta 08/10 às 19h30. Quer agendar um deles?",
+              "intent": "disponibilidade",
+              "route": "ferramenta",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 1767,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "quero agendar um plantão",
+              "lia": "Vamos agendar seu plantão de dúvidas com o professor. Qual é o seu nome completo?",
+              "intent": "agendar_plantao",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 4,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "João Pereira",
+              "lia": "Obrigada, João. Qual é o seu RM?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 2,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "rm 551122",
+              "lia": "Anotado. Qual e-mail devo usar para enviar o link do plantão?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 4,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "joao.pereira@fiap",
+              "lia": "Esse e-mail parece incompleto. O formato é nome@dominio.com.",
+              "intent": "dado_invalido",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 1,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "joao.pereira@fiap.com.br",
+              "lia": "Tenho estes horários com o professor: (1) terça 06/10 às 18h, (2) terça 06/10 às 19h, (3) quarta 07/10 às 17h30. Qual prefere?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 2,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "quarta 17h30",
+              "lia": "Confere: plantão em quarta 07/10 às 17h30, para João Pereira (RM 551122), tema system prompt, com o link enviado para joao.pereira@fiap.com.br. Posso confirmar?",
+              "intent": "informar_dado",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 2,
+              "nlu_origem": "regra",
+              "guardrail": null
+            },
+            {
+              "usuario": "sim",
+              "lia": "Agendado! Plantão com o Prof. Fernando em quarta 07/10 às 17h30, protocolo PL-BC30-P3. O link vai para joao.pereira@fiap.com.br. Posso ajudar em mais algo?",
+              "intent": "confirmar_agendamento",
+              "route": "fluxo",
+              "fallback": false,
+              "handoff": false,
+              "sentimento": "neutro",
+              "latency_ms": 4,
+              "nlu_origem": "regra",
+              "guardrail": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "professor": "Prof. Fernando",
+  "local": "sala de plantão virtual (o link vai por e-mail)",
+  "horarios": [
+    {"id": "P1", "data": "2026-10-06", "rotulo": "terça 06/10 às 18h"},
+    {"id": "P2", "data": "2026-10-06", "rotulo": "terça 06/10 às 19h"},
+    {"id": "P3", "data": "2026-10-07", "rotulo": "quarta 07/10 às 17h30"},
+    {"id": "P4", "data": "2026-10-08", "rotulo": "quinta 08/10 às 18h"},
+    {"id": "P5", "data": "2026-10-08", "rotulo": "quinta 08/10 às 19h30"}
+  ]
+}
