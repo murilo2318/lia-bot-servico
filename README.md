@@ -211,11 +211,15 @@ fora do escopo e não entendi. Isso reduz os fallbacks de paráfrases sem entreg
 Evidência: conversa E2 do A/B e o gráfico "quem classificou a intenção" no painel de métricas.
 
 **Variações de linguagem como dados.** Nas conversas manuais, várias respostas curtas e naturais caíam em
-fallback ("n precisa", "vlw", "Sim" depois de uma oferta, "não tô entendendo nada"). Em vez de remendar o código
-caso a caso, as expressões ficam em `backend/data/variacoes.json`, separadas em despedida, recusa, aceite e
-confusão (cerca de 240 no total). O código normaliza acentos, expande abreviações de chat (n → não, vlw → valeu,
-qnd → quando) e compara com a mensagem inteira, para "não" não capturar "não sei o que é slot". Qualquer pessoa
-do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
+fallback ("n precisa", "vlw", "Sim" depois de uma oferta, "não tô entendendo nada", "Oi, sou Eduarda"). Em vez de
+remendar o código caso a caso, as expressões ficam em `backend/data/variacoes.json`: cerca de 580 expressões em 11
+categorias (despedida, recusa, aceite, confusão, saudação, capacidades, identidade, pedido do professor, repetir,
+elogio e ofensa), cada uma com um comportamento próprio. O código normaliza acentos, expande abreviações de chat
+(n → não, vlw → valeu, qnd → quando) e compara com a mensagem **inteira**, para "não" não capturar "não sei o que
+é slot". As palavras-chave da FAQ também ganharam sinônimos e conjugações ("alucine", "esquece", "indicadores").
+Qualquer pessoa do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
+`tests/test_variacoes.py` mede essa cobertura com 121 frases escritas de forma livre e garante que nenhuma
+expressão está em duas categorias. Com isso, o roteiro do A/B passou a 100% também nas paráfrases.
 
 **3. O agendamento é um fluxo determinístico; o LLM só consulta a agenda.** Horário de plantão é compromisso
 com o professor, então nunca pode ser inventado. Os slots são validados por regex e a confirmação é por regra.

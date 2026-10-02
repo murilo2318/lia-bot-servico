@@ -92,6 +92,12 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
         return NLUResult("disponibilidade", score=1.0)
     # expressões curtas do arquivo data/variacoes.json (comparação com a mensagem inteira)
     cat = categoria(texto)
+    if cat == "pedido_professor":
+        return NLUResult("falar_professor", score=1.0)
+    if cat in {"ofensa", "identidade", "capacidades", "repetir", "elogio"}:
+        return NLUResult(cat, score=1.0)
+    if cat == "saudacao":
+        return NLUResult("saudacao", score=1.0)
     if cat == "despedida":
         return NLUResult("despedida", score=1.0)
     if cat == "recusa":

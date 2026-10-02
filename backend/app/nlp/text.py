@@ -27,6 +27,12 @@ ABREVIACOES = {
     "td": "tudo", "tds": "todos", "mt": "muito", "mto": "muito", "pfv": "por favor", "pfvr": "por favor",
     "q": "que", "cmg": "comigo", "hj": "hoje", "agr": "agora", "dps": "depois", "ngm": "ninguem",
     "sla": "sei la", "tlg": "ta ligado", "kd": "cade", "flw": "falou", "tmj": "valeu", "ok": "ok",
+    "prof": "prof", "profe": "professor", "professo": "professor", "c": "com", "cm": "com", "p": "para",
+    "pq": "por que", "porq": "por que", "tbem": "tambem", "eh": "e", "ta": "ta", "to": "to", "tá": "ta",
+    "nd": "nada", "ngm": "ninguem", "algm": "alguem", "alguem": "alguem", "qual": "qual", "qm": "quem",
+    "vdd": "verdade", "fds": "fim de semana", "bjs": "beijos", "abs": "abracos", "aq": "aqui", "ai": "ai",
+    "entt": "entao", "ent": "entao", "dnv": "de novo", "denovo": "de novo", "mds": "meu deus", "pls": "por favor",
+    "plz": "por favor", "sdds": "saudades", "tmb": "tambem", "vlwww": "valeu", "obgg": "obrigado", "brigadao": "obrigado",
 }
 
 

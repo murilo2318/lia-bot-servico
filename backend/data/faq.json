@@ -6,11 +6,17 @@
   "answer": "O mínimo é: persona e regras, um estado ou slot, memória da conversa, um guardrail ou encaminhamento e uma FAQ.",
   "keywords": [
    "checklist",
+   "checklist do bot",
+   "encaminhamento",
+   "faq",
+   "itens obrigatorios",
    "mínimo",
+   "o que precisa ter",
+   "o que um bot precisa",
    "persona",
    "regras",
-   "encaminhamento",
-   "faq"
+   "requisitos",
+   "requisitos minimos"
   ]
  },
  {
@@ -21,10 +27,15 @@
   "keywords": [
    "caminho feliz",
    "caminho ideal",
+   "cenario ideal",
    "cinco minutos",
    "decorar",
    "fluxo",
+   "fluxo ideal",
+   "fluxo principal",
    "happy path",
+   "por onde comeco",
+   "primeiro passo",
    "sucesso"
   ]
  },
@@ -34,13 +45,22 @@
   "question": "O que é um slot ou estado?",
   "answer": "É um valor capturado e lembrado pelo bot, guardado numa estrutura de dados e não na memória do modelo. Na Lia, o objetivo de aprendizagem e os dados do agendamento de plantão são slots.",
   "keywords": [
+   "campo",
+   "campos",
+   "capturado",
+   "dado capturado",
+   "entidade",
+   "entidades",
+   "estado",
+   "guardar dado",
+   "guardar dados",
+   "lembrado",
+   "objetivo de aprendizagem",
    "slot",
    "slots",
-   "estado",
    "valor",
-   "capturado",
-   "lembrado",
-   "objetivo de aprendizagem"
+   "variaveis",
+   "variavel"
   ]
  },
  {
@@ -49,13 +69,19 @@
   "question": "Quando uso regra e quando uso LLM?",
   "answer": "Decisões críticas devem ser determinísticas, feitas por regras: validação, captura de slots, ações e guardrails. O LLM fica responsável por entender a linguagem e conversar.",
   "keywords": [
-   "regra",
-   "regras",
-   "llm",
-   "decisões",
    "críticas",
+   "decisões",
+   "deterministico",
    "determinísticas",
-   "hibrido"
+   "hibrido",
+   "llm",
+   "quando usar ia",
+   "quando usar o modelo",
+   "regra",
+   "regra ou ia",
+   "regra ou llm",
+   "regras",
+   "regras ou llm"
   ]
  },
  {
@@ -64,14 +90,28 @@
   "question": "Para que serve a base de conhecimento e o que é RAG?",
   "answer": "A FAQ ancora as respostas como uma pequena base de conhecimento. RAG (geração aumentada por recuperação) é o passo seguinte: o bot busca os trechos mais relevantes dos documentos e gera a resposta a partir deles, citando a fonte. Nos dois casos, se a resposta não está na base, o bot admite que não sabe em vez de inventar.",
   "keywords": [
+   "alucina",
+   "alucinacao",
+   "alucinacoes",
+   "alucinando",
+   "alucinar",
    "alucinação",
+   "alucine",
+   "alucinou",
    "ancorar",
    "base de conhecimento",
+   "base de dados",
+   "citar a fonte",
    "documentos",
    "faq",
+   "fonte",
+   "fontes",
    "inventa",
+   "inventando",
    "inventar",
+   "inventar resposta",
    "invente",
+   "inventou",
    "rag",
    "recuperacao",
    "âncora"
@@ -83,13 +123,22 @@
   "question": "Como testar e preparar a demo?",
   "answer": "Converse de verdade, teste o happy path, o fallback e o handoff, e prepare a demonstração.",
   "keywords": [
-   "testar",
-   "teste",
-   "testes",
+   "apresentação",
+   "casos de teste",
+   "como testo",
    "demo",
    "demonstrar",
    "demonstração",
-   "apresentação"
+   "ensaio",
+   "roteiro de teste",
+   "testa",
+   "testando",
+   "testar",
+   "testar o bot",
+   "teste",
+   "testes",
+   "testo",
+   "validar"
   ]
  },
  {
@@ -98,13 +147,27 @@
   "question": "Quais métricas devo acompanhar?",
   "answer": "Acompanhe taxa de contenção, taxa de fallback, taxa de handoff, mensagens por conversa e satisfação (CSAT). Contenção alta sem satisfação pode esconder usuários que desistiram.",
   "keywords": [
-   "métricas",
-   "métrica",
+   "avaliar o bot",
    "contenção",
-   "resolução",
-   "turnos",
    "csat",
-   "medir"
+   "desempenho do bot",
+   "indicador",
+   "indicadores",
+   "kpi",
+   "kpis",
+   "meco",
+   "mede",
+   "medindo",
+   "medir",
+   "metrica",
+   "metricas",
+   "métrica",
+   "métricas",
+   "resolução",
+   "satisfacao",
+   "taxa de fallback",
+   "taxa de handoff",
+   "turnos"
   ]
  },
  {
@@ -113,12 +176,17 @@
   "question": "O que é o system prompt e como escrevê-lo?",
   "answer": "É o DNA do bot, enviado no início de toda chamada. Tem cinco camadas: papel ou persona, objetivo e capacidades, regras e guardrails, tom e formato, e exemplos (few-shot).",
   "keywords": [
-   "system prompt",
-   "prompt de sistema",
-   "cinco camadas",
    "camadas",
+   "cinco camadas",
+   "dna do bot",
    "few shot",
-   "instruções"
+   "instrucoes do bot",
+   "instruções",
+   "prompt base",
+   "prompt de sistema",
+   "prompt do sistema",
+   "prompt inicial",
+   "system prompt"
   ]
  },
  {
@@ -127,13 +195,28 @@
   "question": "Como funciona a memória de um chatbot LLM?",
   "answer": "O LLM não guarda nada entre chamadas. A memória é o histórico reenviado a cada turno, controlado por uma janela deslizante ou por sumarização. Memória é a conversa; estado são os dados.",
   "keywords": [
-   "memória",
-   "janela",
-   "histórico",
    "contexto",
-   "sumarização",
+   "contexto da conversa",
+   "esqueca",
    "esquece",
-   "lembrar"
+   "esquecer",
+   "esqueceu",
+   "fio da conversa",
+   "historico da conversa",
+   "histórico",
+   "janela",
+   "janela de contexto",
+   "lembra",
+   "lembrar",
+   "lembre",
+   "lembrou",
+   "memória",
+   "nao lembra",
+   "perde o fio",
+   "perder o fio",
+   "perdeu o fio",
+   "sumarização",
+   "tokens"
   ]
  },
  {
@@ -142,13 +225,27 @@
   "question": "O que são guardrails e quando transferir para humano?",
   "answer": "Guardrails são limites em código na entrada e na saída do bot. O handoff transfere para um humano em temas sensíveis, frustração, pedido explícito ou falhas repetidas, passando um resumo para ninguém repetir tudo.",
   "keywords": [
+   "atendente humano",
+   "bloquear",
+   "bloqueia",
+   "bloqueio",
+   "escalar",
+   "escalonamento",
    "guardrail",
    "guardrails",
    "handoff",
-   "transferir",
-   "transferência",
+   "injection",
+   "limite",
+   "limites",
+   "passar para humano",
    "prompt injection",
-   "injection"
+   "protecao",
+   "protege",
+   "proteger",
+   "seguranca",
+   "transfere",
+   "transferir",
+   "transferência"
   ]
  },
  {
@@ -157,12 +254,19 @@
   "question": "O que é um bom design conversacional?",
   "answer": "É projetar a conversa: persona clara, capacidades ditas no início, uma pergunta por vez, fallback com opções e rota de fuga para humano. As máximas de Grice (qualidade, quantidade, relação e modo) servem de régua.",
   "keywords": [
-   "design conversacional",
+   "boas praticas",
    "design",
+   "design conversacional",
+   "escrever as falas",
+   "experiencia do usuario",
+   "fallback",
+   "fluxo de conversa",
    "grice",
    "máximas",
-   "fallback",
-   "persona do bot"
+   "persona do bot",
+   "tom de voz",
+   "uma pergunta por vez",
+   "ux"
   ]
  }
 ]

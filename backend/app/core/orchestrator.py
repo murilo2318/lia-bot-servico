@@ -285,6 +285,34 @@ class Orchestrator:
             return self._consultar_agendamento(s, tr)
         if nlu.intent == "disponibilidade":
             return self._disponibilidade(s, tr)
+        if nlu.intent == "capacidades":
+            tr.route = "regra"
+            tr.reply = ("Eu sou a Lia, assistente virtual da oficina. Posso: (1) explicar os temas da oficina, como "
+                        "checklist do bot, happy path, slots e estado, regra × LLM, base de conhecimento e RAG, testes, "
+                        "métricas, system prompt, memória, guardrails e design conversacional; (2) agendar, consultar "
+                        "ou cancelar um plantão com o professor; (3) chamar o professor. Não faço a atividade por você. "
+                        "Por onde quer começar?")
+            return
+        if nlu.intent == "identidade":
+            tr.route = "regra"
+            tr.reply = ("Sou a Lia, uma assistente virtual: um programa, não uma pessoa e nem o professor. Se precisar "
+                        "de alguém de verdade, é só pedir que eu chamo o professor.")
+            return
+        if nlu.intent == "repetir":
+            tr.route, tr.used_memory = "regra", True
+            anteriores = [m["content"] for m in self.store.get_messages(s.id) if m["role"] == "assistant"]
+            tr.reply = anteriores[-1] if anteriores else f"Claro! Posso te ajudar a {MENU}."
+            return
+        if nlu.intent == "elogio":
+            tr.route = "regra"
+            tr.reply = "Que bom que está ajudando! Se tiver outra dúvida, é só mandar."
+            return
+        if nlu.intent == "ofensa":
+            tr.route = "regra"
+            tr.reply = ("Sinto muito que eu não esteja ajudando. Posso tentar explicar de outro jeito, ou chamar o "
+                        "professor. O que prefere?")
+            tr.acoes.append("aluno irritado com a Lia")
+            return
         if nlu.intent == "recusa_oferta":
             tr.route = "regra"
             tr.reply = "Tudo bem! Se surgir outra dúvida, é só mandar."

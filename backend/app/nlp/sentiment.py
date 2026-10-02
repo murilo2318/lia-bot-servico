@@ -19,12 +19,16 @@ NEGATIVOS = {
     "nao ajuda": 1.5, "nao ajudou": 1.5, "voce nao entende": 1.5, "que droga": 1.5,
     "nao to entendendo": 1.0, "nao estou entendendo": 1.0, "boiando": 1.0, "boiei": 1.0, "me perdi": 1.0,
     "nao sei o que fazer": 1.0, "nao faco ideia": 0.8, "socorro": 1.0, "nao consigo acompanhar": 1.0,
+    "burra": 1.5, "burro": 1.5, "lixo": 1.5, "porcaria": 1.5, "nao serve pra nada": 1.5, "nao serve para nada": 1.5,
+    "chata": 1.0, "que saco": 1.0, "merda": 1.5, "nao ajuda em nada": 1.5, "travado": 1.0, "travada": 1.0,
+    "empacado": 1.0, "empacada": 1.0, "dificil demais": 1.0, "complicado demais": 1.0, "muita informacao": 0.8,
 }
 FRUSTRACAO_FORTE = {"desisto", "desistir", "cansei", "to desistindo", "nao aguento mais", "chega"}
 POSITIVOS = {
     "obrigado": 1.0, "obrigada": 1.0, "valeu": 1.0, "otimo": 1.0, "otima": 1.0,
     "perfeito": 1.0, "legal": 0.8, "show": 0.8, "entendi": 0.8, "ajudou": 1.0,
-    "massa": 0.8, "top": 0.8, "excelente": 1.2, "muito bom": 1.0, "gostei": 1.0,
+    "massa": 0.8, "top": 0.8, "excelente": 1.2, "muito bom": 1.0, "gostei": 1.0, "adorei": 1.2, "amei": 1.2,
+    "mandou bem": 1.0, "parabens": 1.0, "incrivel": 1.0, "sensacional": 1.2, "otima": 1.0, "demais": 0.5,
 }
 
 

@@ -29,9 +29,10 @@ def carregar() -> dict[str, frozenset[str]]:
 
 
 def categoria(texto: str) -> str | None:
-    """Devolve despedida | recusa | aceite | confusao, ou None."""
+    """Devolve a categoria da mensagem (ver data/variacoes.json), ou None."""
     t = _canon(texto)
-    for cat in ("confusao", "despedida", "recusa", "aceite"):
+    for cat in ("pedido_professor", "ofensa", "confusao", "identidade", "capacidades", "repetir",
+                "despedida", "recusa", "elogio", "saudacao", "aceite"):
         if t in carregar().get(cat, ()):
             return cat
     return None
