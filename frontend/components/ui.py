@@ -24,8 +24,14 @@ ETAPAS = [
 CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
-html, body, [class*="st-"], .stMarkdown, button, input, textarea {
+/* Fonte só nos elementos de texto. Aplicar a [class*="st-"] trocava também a fonte dos ícones do
+   Streamlit (Material Symbols), que passavam a aparecer como palavras: "face", "star", "arrow_down". */
+html, body, .stApp, .stMarkdown, p, li, label, input, textarea, h1, h2, h3, h4, h5, h6,
+[data-testid="stMetricValue"], [data-testid="stMetricLabel"], [data-testid="stCaptionContainer"] {
   font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+[data-testid="stIconMaterial"], [class*="material-symbols"], [class*="material-icons"] {
+  font-family: 'Material Symbols Rounded', 'Material Symbols Outlined', 'Material Icons' !important;
 }
 h1 { font-size: 2.1rem; letter-spacing: -0.01em; margin-bottom: 0.1rem; }
 .lia-sub { color: #6B5A7B; margin-top: 0; max-width: 60ch; }
@@ -94,6 +100,8 @@ def raio_x(turno: dict | None, sessao: dict | None) -> None:
         c3.metric("Fallback", "sim" if turno["fallback"] else "não")
         c4.metric("Latência", f"{turno['latency_ms']} ms")
         detalhes = []
+        if turno.get("texto_interpretado"):
+            detalhes.append(f"Entendido como: “{turno['texto_interpretado']}”")
         if turno.get("faq_id"):
             detalhes.append(f"FAQ consultada: `{turno['faq_id']}`")
         if turno.get("used_memory"):

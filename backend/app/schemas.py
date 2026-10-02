@@ -67,6 +67,8 @@ class ChatOut(BaseModel):
     guardrail: Guardrail | None = None
     etapa: str | None = Field(None, description="Etapa do fluxo de agendamento, se houver")
     nlu_origem: str = Field("regra", description="regra | llm | memoria")
+    texto_interpretado: str | None = Field(None, description="Como a mensagem foi entendida, quando houve "
+                                                         "correção de digitação ou interpretação pelo LLM")
     model: str
 
 

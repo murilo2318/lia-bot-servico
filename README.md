@@ -193,7 +193,7 @@ Abre em http://localhost:7860.
 
 ```bash
 cd backend
-python -m pytest -q                        # 198 testes, incluindo T1–T8, sem chave e sem internet
+python -m pytest -q                        # 251 testes, incluindo T1–T8, sem chave e sem internet
 python scripts/ab_test.py --julgar         # A/B v1 × v2 com LLM-as-judge (backend rodando)
 ```
 
@@ -222,6 +222,22 @@ elogio e ofensa), cada uma com um comportamento próprio. O código normaliza ac
 Qualquer pessoa do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
 `tests/test_variacoes.py` mede essa cobertura com 121 frases escritas de forma livre e garante que nenhuma
 expressão está em duas categorias. Com isso, o roteiro do A/B passou a 100% também nas paráfrases.
+
+**Robustez a erros de digitação e classificador LLM com confiança.** Uma revisão da arquitetura apontou que a
+camada flexível era estreita: erros como "slto" ou "profssor" escapavam das regras, e o classificador LLM só podia
+responder "FAQ", "fora da base", "fora do escopo" ou "não entendi", sem conseguir reconhecer um pedido de
+professor ou de agendamento. Três mudanças, sem dependência nova:
+- **Correção ortográfica controlada** (`nlp/ortografia.py`, com `difflib`): só corrige para palavras do
+  vocabulário da Lia, exige a mesma primeira letra e quase o mesmo tamanho, e nunca toca em números, e-mails ou
+  nos dados do agendamento (validados sobre o texto original). O raio-X mostra o texto interpretado.
+- **Classificador com as 17 intenções**, recebendo um resumo de cada FAQ e o estado da conversa. Ele só
+  classifica; o código decide pela confiança: FAQ acima de 0,75 é respondida, entre 0,5 e 0,75 a Lia pergunta
+  "Você quis perguntar...?"; professor e tema sensível acima de 0,75 vão para o professor (errar aí só chama uma
+  pessoa à toa); agendar apenas abre o fluxo; **cancelar nunca é executado pelo LLM sem confirmação**.
+- **Testes antes do código:** `tests/test_robustez.py` mediu 6 de 23 frases com erro entendidas por regra antes
+  da mudança e 23 de 23 depois, com testes negativos para falsos positivos ("estudando" não pode virar
+  "testando"). `scripts/robustez.py` mede o mesmo com o modelo real, incluindo paráfrases.
+  Ficaram para depois da entrega: busca semântica com embeddings e variação de estilo das respostas.
 
 **3. O agendamento é um fluxo determinístico; o LLM só consulta a agenda.** Horário de plantão é compromisso
 com o professor, então nunca pode ser inventado. Os slots são validados por regex e a confirmação é por regra.

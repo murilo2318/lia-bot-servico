@@ -25,9 +25,9 @@ from app.llm.client import LLMClient, LLMUnavailable
 from app.memory.store import Session, Store, agora
 from app.nlp import validators as v
 from app.nlp.guardrails import checar_entrada, checar_saida
-from app.nlp.nlu import NLUResult, classificar_por_llm, classificar_por_regras
+from app.nlp.nlu import NLUResult, classificar_por_llm, classificar_por_regras, interpretar
 from app.nlp.sentiment import Sentimento, analisar_sentimento
-from app.nlp.text import contains_phrase, normalize_text
+from app.nlp.text import contains_phrase, expandir_abreviacoes, normalize_text
 
 OBJETIVOS = {
     "design": "design conversacional",
@@ -104,6 +104,7 @@ class TurnResult:
     etapa: str | None = None
     model: str = ""
     nlu_origem: str = "regra"
+    texto_interpretado: str | None = None
 
 
 @dataclass
@@ -125,6 +126,7 @@ class _Turno:
     tokens_out: int = 0
     acoes: list = field(default_factory=list)
     modelo: str | None = None       # modelo que respondeu de fato (pode ser o reserva)
+    texto_interpretado: str | None = None   # como a mensagem foi entendida (correção ou LLM)
 
 
 def carregar_prompt(versao: str) -> str:
@@ -195,7 +197,8 @@ class Orchestrator:
                      "reason": (s.handoff or {}).get("motivo"),
                      "summary": (s.handoff or {}).get("resumo")},
             turn=st.turn, latency_ms=latencia, faq_id=tr.faq_id, used_memory=tr.used_memory,
-            guardrail=tr.guardrail, etapa=st.etapa, model=tr.modelo or s.model, nlu_origem=tr.nlu_origem)
+            guardrail=tr.guardrail, etapa=st.etapa, model=tr.modelo or s.model, nlu_origem=tr.nlu_origem,
+            texto_interpretado=tr.texto_interpretado)
 
     # ------------------------------------------------------------------
     def _decidir(self, s: Session, tr: _Turno) -> None:
@@ -225,6 +228,9 @@ class Orchestrator:
                 return
 
         nlu = classificar_por_regras(tr.texto, st.ultima_faq)
+        interpretado = interpretar(tr.texto)
+        if interpretado != expandir_abreviacoes(normalize_text(tr.texto)):
+            tr.texto_interpretado = interpretado           # houve correção de digitação
 
         # 2. oferta de handoff pendente
         if st.oferta_handoff:
@@ -235,6 +241,29 @@ class Orchestrator:
             if resposta is False:
                 tr.intent, tr.route = "recusou_handoff", "regra"
                 tr.reply = f"Tudo bem, seguimos por aqui. Posso te ajudar a {MENU}."
+                return
+
+        # 2a. confirmação de cancelamento pedida porque o LLM entendeu "cancelar"
+        if st.confirmar_cancelamento:
+            st.confirmar_cancelamento = False
+            resposta = v.e_confirmacao(tr.texto)
+            if resposta is True:
+                return self._cancelar_agendamento(s, tr)
+            if resposta is False:
+                tr.intent, tr.route = "manteve_agendamento", "regra"
+                tr.reply = "Combinado, seu plantão continua marcado."
+                return
+
+        # 2c. "você quis perguntar...?" — o "sim" vira continuação (st.ultima_faq); o "não" pede outra forma
+        if st.esclarecendo:
+            faq_id, st.esclarecendo = st.esclarecendo, None
+            resposta = v.e_confirmacao(tr.texto)
+            if resposta is True:
+                return self._responder_faq(s, tr, get_faq(faq_id))
+            if resposta is False:
+                st.ultima_faq = None
+                tr.intent, tr.route = "esclarecimento_negado", "regra"
+                tr.reply = "Tudo bem! Pode escrever a pergunta de outro jeito?"
                 return
 
         # 2b. resposta à oferta de agendamento feita depois de mostrar a agenda
@@ -345,21 +374,61 @@ class Orchestrator:
         if nlu.intent in {"faq", "continuacao"}:
             return self._responder_faq(s, tr, get_faq(nlu.faq_id), usou_memoria=nlu.intent == "continuacao")
 
-        # nada casou por regra → LLM tenta entender (decisão regra × LLM nº 2)
+        # nada casou por regra → LLM tenta entender (decisão regra × LLM nº 2).
+        # O LLM só CLASSIFICA; o código decide pela confiança e nunca executa ação destrutiva sozinho.
         if self.cfg.nlu_llm_fallback:
             llm_nlu = None
             try:
-                llm_nlu = classificar_por_llm(self.llm_for(s), tr.texto, self._contexto_curto(s))
+                llm_nlu = classificar_por_llm(self.llm_for(s), tr.texto, self._contexto_curto(s), st.ultima_faq)
             except LLMUnavailable as exc:
                 log.warning("NLU pelo LLM falhou (%s); seguindo por regra", exc)
                 tr.acoes.append("NLU do LLM indisponível; seguiu por regra")
             if llm_nlu:
                 tr.nlu_origem = "llm"
-                tr.intent = llm_nlu.intent
-                if llm_nlu.intent == "faq":
-                    # fora do try: se a RESPOSTA falhar, é 503 — nunca um falso "não entendi"
-                    return self._responder_faq(s, tr, get_faq(llm_nlu.faq_id))
+                tr.texto_interpretado = llm_nlu.texto_interpretado or tr.texto_interpretado
+                if self._agir_pelo_llm(s, tr, llm_nlu):
+                    return
+                tr.intent = llm_nlu.intent if llm_nlu.intent in {"fora_da_base", "fora_escopo"} else "nao_entendi"
         self._fallback(tr, tr.intent if tr.intent in {"fora_da_base", "fora_escopo"} else "nao_entendi")
+
+    def _agir_pelo_llm(self, s: Session, tr: _Turno, nlu: NLUResult) -> bool:
+        """Decide o que fazer com a classificação do LLM. Devolve True se tratou o turno."""
+        st, alta, media = s.state, self.cfg.nlu_conf_alta, self.cfg.nlu_conf_media
+        conf, intent = nlu.score, nlu.intent
+        tr.acoes.append(f"LLM classificou como {intent} (confiança {conf:.2f})")
+        if intent == "faq":
+            faq = get_faq(nlu.faq_id)
+            if conf >= alta:
+                self._responder_faq(s, tr, faq)
+                return True
+            if conf >= media:                          # meio-termo: confirma antes de responder
+                st.esclarecendo = st.ultima_faq = faq.id
+                tr.intent, tr.route, tr.faq_id = "esclarecimento", "regra", faq.id
+                tema = faq.question.rstrip("?").lower()
+                tr.reply = f"Você quis perguntar \"{tema}\"? Responda sim ou não."
+                return True
+            return False
+        if conf < alta:
+            return False
+        if intent in {"falar_professor", "tema_sensivel"}:   # errar aqui só chama o professor à toa
+            nlu.urgente = False
+            self._handoff(s, tr, "pedido_explicito" if intent == "falar_professor" else "tema_sensivel", nlu)
+            return True
+        if intent == "cancelar":                           # nunca cancela pelo LLM: pede confirmação
+            tr.route, tr.intent = "regra", "cancelar"
+            if st.slots.get("protocolo"):
+                st.confirmar_cancelamento = True
+                tr.reply = (f"Quer mesmo cancelar seu plantão de {st.slots['horario']['rotulo']}? "
+                            "Responda sim ou não.")
+            else:
+                tr.reply = "Você não tem plantão agendado comigo. Quer agendar um?"
+            return True
+        if intent in {"agendar_plantao", "disponibilidade", "consultar_agendamento", "saudacao", "despedida",
+                      "capacidades", "identidade", "repetir", "confusao", "continuacao"}:
+            self._rotear(s, tr, nlu)                       # mesmos tratamentos das regras
+            tr.nlu_origem = "llm"
+            return True
+        return False
 
     # --- respostas ------------------------------------------------------
     def _acolher(self, tr: _Turno, texto: str) -> str:

@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     history_window_turns: int = 6       # N turnos (usuário + bot) enviados ao LLM
     summary_enabled: bool = True        # resumo rolante do histórico antigo
     nlu_llm_fallback: bool = True       # LLM classifica quando as regras não casam
+    nlu_conf_alta: float = 0.75         # acima: o sistema age pela classificação do LLM
+    nlu_conf_media: float = 0.5         # entre média e alta: pergunta "você quis dizer...?" (só FAQ)
     max_input_chars: int = 500          # guardrail de entrada (conversacional)
     max_output_chars: int = 700         # guardrail de saída
 

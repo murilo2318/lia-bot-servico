@@ -14,8 +14,8 @@ ARQUIVO = BASE_DIR / "data" / "variacoes.json"
 SUFIXOS = (" lia", " por favor", " ai", " entao", " mesmo")
 
 
-def _canon(texto: str) -> str:
-    t = expandir_abreviacoes(normalize_text(texto))
+def _canon(texto: str, ja_normalizado: bool = False) -> str:
+    t = texto if ja_normalizado else expandir_abreviacoes(normalize_text(texto))
     for s in SUFIXOS:                      # "valeu lia", "sim por favor" → mesma forma
         if t.endswith(s) and len(t) > len(s):
             t = t[: -len(s)]
@@ -28,9 +28,9 @@ def carregar() -> dict[str, frozenset[str]]:
     return {cat: frozenset(_canon(x) for x in itens) for cat, itens in dados.items() if not cat.startswith("_")}
 
 
-def categoria(texto: str) -> str | None:
+def categoria(texto: str, ja_normalizado: bool = False) -> str | None:
     """Devolve a categoria da mensagem (ver data/variacoes.json), ou None."""
-    t = _canon(texto)
+    t = _canon(texto, ja_normalizado)
     for cat in ("pedido_professor", "ofensa", "confusao", "identidade", "capacidades", "repetir",
                 "despedida", "recusa", "elogio", "saudacao", "aceite"):
         if t in carregar().get(cat, ()):

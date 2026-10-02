@@ -32,7 +32,7 @@ ABREVIACOES = {
     "nd": "nada", "ngm": "ninguem", "algm": "alguem", "alguem": "alguem", "qual": "qual", "qm": "quem",
     "vdd": "verdade", "fds": "fim de semana", "bjs": "beijos", "abs": "abracos", "aq": "aqui", "ai": "ai",
     "entt": "entao", "ent": "entao", "dnv": "de novo", "denovo": "de novo", "mds": "meu deus", "pls": "por favor",
-    "plz": "por favor", "sdds": "saudades", "tmb": "tambem", "vlwww": "valeu", "obgg": "obrigado", "brigadao": "obrigado",
+    "plz": "por favor", "sdds": "saudades", "tmb": "tambem", "vlwww": "valeu", "obgg": "obrigado", "brigadao": "obrigado", "valew": "valeu", "valeuu": "valeu", "obrigadu": "obrigado",
 }
 
 

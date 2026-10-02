@@ -29,6 +29,9 @@ python scripts/ab_test.py --so T1,T5,E2
 # reavaliar o último A/B salvo com o juiz, sem conversar com o bot de novo
 python scripts/llm_judge.py --rejulgar --juiz groq:qwen/qwen3.8-27b
 
+# medir com o modelo real quanto a Lia entende erros de digitação e paráfrases
+python scripts/robustez.py
+
 # avaliar com o juiz uma conversa feita pela tela (session_id aparece na barra lateral)
 python scripts/llm_judge.py --sessao <session_id>
 ```

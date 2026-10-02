@@ -60,6 +60,8 @@ class SessionState:
     oferta_agendamento: bool = False     # a Lia acabou de mostrar a agenda
     pediu_avaliacao: bool = False        # a Lia acabou de pedir a nota de 1 a 5
     apelido: str | None = None           # como o aluno se apresentou ("oi, sou Eduarda")
+    esclarecendo: str | None = None      # FAQ que a Lia perguntou "você quis dizer...?"
+    confirmar_cancelamento: bool = False # o LLM entendeu "cancelar": pede confirmação antes
     dia_preferido: str | None = None     # dia que o aluno perguntou na agenda
     ultima_faq: str | None = None
     resumo: str = ""
