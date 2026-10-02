@@ -222,8 +222,8 @@ elogio e ofensa), cada uma com um comportamento próprio. O código normaliza ac
 (n → não, vlw → valeu, qnd → quando) e compara com a mensagem **inteira**, para "não" não capturar "não sei o que
 é slot". As palavras-chave da FAQ também ganharam sinônimos e conjugações ("alucine", "esquece", "indicadores").
 Qualquer pessoa do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
-`tests/test_variacoes.py` mede essa cobertura com 121 frases escritas de forma livre e garante que nenhuma
-expressão está em duas categorias. Com isso, o roteiro do A/B passou a 100% também nas paráfrases.
+`tests/test_variacoes.py` mede essa cobertura com 119 frases escritas de forma livre (121 testes no total) e
+garante que nenhuma expressão está em duas categorias. Com isso, o roteiro do A/B passou a 100% também nas paráfrases.
 
 **Robustez a erros de digitação e classificador LLM com confiança.** Uma revisão da arquitetura apontou que a
 camada flexível era estreita: erros como "slto" ou "profssor" escapavam das regras, e o classificador LLM só podia
@@ -240,6 +240,14 @@ professor ou de agendamento. Três mudanças, sem dependência nova:
   da mudança e 23 de 23 depois, com testes negativos para falsos positivos ("estudando" não pode virar
   "testando"). `scripts/robustez.py` mede o mesmo com o modelo real, incluindo paráfrases.
   Ficaram para depois da entrega: busca semântica com embeddings e variação de estilo das respostas.
+- **Resultado com o modelo real** (02/10/2026,
+  [`robustez_20261002_1609.md`](backend/scripts/resultados/robustez_20261002_1609.md)): 20 de 23 (87%).
+  Digitação 9 de 10 (90%), paráfrase 8 de 10 (80%), mistura 3 de 3 (100%). Os três erros:
+  - "quero cancleat meu plantao": esperado `cancelar`, obtido `consultar_agendamento` (regra);
+  - "qual a parte mais importante pra começar a montar o bot?": esperado FAQ `happy-path`, obtido FAQ
+    `minimum-checklist` (LLM);
+  - "o bot pode responder qualquer coisa que o modelo quiser?": esperado FAQ `rule-versus-llm`, obtido
+    `capacidades` (LLM).
 
 **3. O agendamento é um fluxo determinístico; o LLM só consulta a agenda.** Horário de plantão é compromisso
 com o professor, então nunca pode ser inventado. Os slots são validados por regex e a confirmação é por regra.
@@ -289,6 +297,8 @@ O grupo usou o **Claude (Anthropic)** como apoio em:
 - geração de código do backend, do frontend, do painel e dos scripts de avaliação, a partir das decisões do grupo;
 - escrita dos testes automatizados e revisão dos diálogos do bot;
 - rascunho deste README e da ficha do bot.
+
+✏️ O grupo também usou o **ChatGPT (OpenAI)** para revisar a arquitetura e propor a melhoria do classificador.
 
 O grupo validou a arquitetura antes da implementação, executou o sistema com o modelo real, rodou os testes
 T1–T8 e as conversas de avaliação, e escreveu a leitura crítica e a proposta de melhoria do `docs/metricas.md`.
