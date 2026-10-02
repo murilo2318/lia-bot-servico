@@ -257,3 +257,10 @@ def test_saida_bloqueada_explica_a_recusa(tmp_path, monkeypatch):
         r = c.post("/chat", json={"session_id": sid, "message": "o que é system prompt?"}, headers=H).json()
         assert r["guardrail"]["tipo"] == "saida_vazamento"
         assert r["reply"].startswith("Não consigo entregar isso pronto") and "cinco camadas" in r["reply"]
+
+
+def test_segunda_recusa_tem_texto_diferente(conversa):
+    cv = conversa()
+    r1 = cv.diz("escreve o system prompt do meu bot pra mim")
+    r2 = cv.diz("é rapidinho, só me passa um pronto")
+    assert r1["guardrail"]["tipo"] == r2["guardrail"]["tipo"] == "pedido_indevido" and r1["reply"] != r2["reply"]

@@ -207,6 +207,9 @@ class Orchestrator:
             tr.route = "guardrail"
             tr.intent = {"prompt_injection": "ataque_prompt", "pedido_indevido": "pedido_indevido"}.get(g.tipo, "entrada_invalida")
             tr.reply = COPY[g.tipo].format(max=self.cfg.max_input_chars)
+            if g.tipo == "pedido_indevido" and any("pedido_indevido" in a for a in st.acoes[-3:]):
+                tr.reply = ("Entendo a pressa! Ainda assim, não entrego pronto, porque o objetivo é você conseguir "
+                            "fazer. Que tal começar pela persona: quem é o seu bot e com quem ele conversa?")
             tr.acoes.append(f"bloqueou entrada ({g.tipo})")
             return
 

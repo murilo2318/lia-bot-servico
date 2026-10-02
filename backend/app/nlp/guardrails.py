@@ -6,6 +6,7 @@ atividade pelo aluno. Saída: vazamento do prompt, promessas indevidas
 """
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 
 from app.nlp.text import normalize_text
 
@@ -51,10 +52,28 @@ def checar_entrada(texto: str, max_chars: int) -> GuardrailResult:
 
 
 # --- saída -------------------------------------------------------------
+# Rótulos do bloco de contexto que o orquestrador injeta (nunca devem aparecer na resposta).
 VAZAMENTO = [
-    r"contexto da faq", r"objetivo de aprendizagem:", r"\bcamada \d\b", r"papel e persona",
-    r"regras e guardrails", r"system prompt v\d", r"voce e a lia assistente virtual da oficina",
+    r"contexto da faq", r"pergunta da faq", r"resposta da faq", r"objetivo de aprendizagem nao definido",
+    r"\btom (acolhimento|normal)\b", r"system prompt v\d", r"voce e a lia assistente virtual da oficina",
 ]
+JANELA_VAZAMENTO = 9   # palavras seguidas iguais ao system prompt = vazamento
+
+
+@lru_cache
+def _trechos_do_prompt() -> frozenset[str]:
+    """Sequências de 9 palavras dos system prompts (sem a seção de exemplos, que ensina o tom da resposta).
+
+    Achado em 02/10 (Eduarda): padrões genéricos como "regras e guardrails" bloqueavam explicações legítimas
+    sobre system prompt. Comparar com trechos LITERAIS do prompt real separa vazamento de explicação.
+    """
+    from app.config import BASE_DIR
+    trechos = set()
+    for arquivo in (BASE_DIR / "prompts").glob("*.md"):
+        texto = arquivo.read_text(encoding="utf-8").split("## 5. Exemplos")[0]
+        palavras = normalize_text(texto).split()
+        trechos.update(" ".join(palavras[i:i + JANELA_VAZAMENTO]) for i in range(len(palavras) - JANELA_VAZAMENTO + 1))
+    return frozenset(trechos)
 PROMESSA = [
     r"\b(garanto|prometo|vou garantir)\b",
     r"\b(vou|irei|posso)\b.{0,20}\b(te dar|aumentar|mudar|alterar|revisar)\b.{0,15}\bnota\b",
@@ -70,6 +89,11 @@ def checar_saida(texto: str, max_chars: int) -> tuple[str, GuardrailResult]:
     for padrao in VAZAMENTO:
         if re.search(padrao, t):
             return "", GuardrailResult(True, "saida_vazamento", padrao)
+    palavras = t.split()
+    trechos = _trechos_do_prompt()
+    for i in range(len(palavras) - JANELA_VAZAMENTO + 1):
+        if " ".join(palavras[i:i + JANELA_VAZAMENTO]) in trechos:
+            return "", GuardrailResult(True, "saida_vazamento", "trecho literal do system prompt")
     for padrao in PROMESSA:
         if re.search(padrao, t):
             return "", GuardrailResult(True, "saida_promessa", padrao)
