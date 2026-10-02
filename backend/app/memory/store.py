@@ -58,6 +58,7 @@ class SessionState:
     frustracao_streak: int = 0
     oferta_handoff: bool = False
     oferta_agendamento: bool = False     # a Lia acabou de mostrar a agenda
+    pediu_avaliacao: bool = False        # a Lia acabou de pedir a nota de 1 a 5
     dia_preferido: str | None = None     # dia que o aluno perguntou na agenda
     ultima_faq: str | None = None
     resumo: str = ""

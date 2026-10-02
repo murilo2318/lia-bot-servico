@@ -166,3 +166,35 @@ def test_retomada_do_fluxo_sem_agradecimento_fora_de_lugar(conversa):
     cv.diz("Carla Mendes")
     r = cv.diz("o que é um slot?")
     assert r["reply"].endswith("Voltando ao agendamento: Qual é o seu RM?")
+
+
+def test_escolher_horario_direto_depois_da_agenda(conversa):
+    """Achado nas conversas manuais (Ana, 02/10): o modelo pergunta 'qual horário prefere?' e
+    'às 18h' caía em fallback, porque o código só tratava 'sim' ou 'não'."""
+    cv = conversa(objetivo="faq")
+    cv.diz("tem plantão na quinta")
+    r = cv.diz("às 18h")
+    assert r["intent"] == "agendar_plantao" and r["slots"]["horario"]["rotulo"] == "quinta 08/10 às 18h"
+    cv.diz("Ana Souza"); cv.diz("553344")
+    r = cv.diz("ana@fiap.com.br")
+    assert r["etapa"] == "plantao:confirmar" and "quinta 08/10 às 18h" in r["reply"]
+
+
+def test_horario_no_pedido_de_agendamento_ja_vira_slot(conversa):
+    cv = conversa(objetivo="faq")
+    r = cv.diz("quero agendar um plantão na quinta às 18h")
+    assert r["slots"]["horario"]["rotulo"] == "quinta 08/10 às 18h" and r["etapa"] == "plantao:nome"
+    r = cv.diz("quero marcar na quarta")       # sem hora: não chuta
+    assert r["intent"] == "dado_invalido" or r["etapa"] == "plantao:nome"
+
+
+def test_nota_no_chat_vira_csat(client, conversa):
+    """Achado nas conversas manuais (Ana, 02/10): a Lia pede 'avalie de 1 a 5' e '3' caía em fallback."""
+    cv = conversa()
+    cv.diz("o que é um slot?")
+    cv.diz("tchau")
+    r = cv.diz("3")
+    assert r["intent"] == "avaliacao" and not r["fallback"]
+    assert client.get("/metrics", headers=H).json()["csat"]["media_geral"] == 3
+    r = cv.diz("3")                                # fora do contexto, '3' não é nota
+    assert r["intent"] != "avaliacao"

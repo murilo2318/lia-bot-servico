@@ -23,11 +23,21 @@ class SlotResult:
     erro: str | None = None
 
 
+NAO_NOME = {"quero", "queria", "marcar", "agendar", "plantao", "horario", "quarta", "quinta", "terca", "segunda",
+            "sexta", "duvida", "professor", "nao", "sim", "oi", "ola", "como", "que", "qual", "pode", "isso", "aqui",
+            "entendi", "ajuda", "obrigado", "obrigada", "cancelar", "tchau", "lia"}
+
+
 def validar_nome(texto: str) -> SlotResult:
     bruto = RE_NOME_PREFIXO.sub("", texto.strip()).strip(" .!,")
+    if set(normalize_text(bruto).split()) & NAO_NOME:
+        return SlotResult(False, erro="Isso não parece um nome. Qual é o seu nome completo (ex.: Marina Alves)?")
     if not RE_NOME_VALIDO.match(bruto):
         return SlotResult(False, erro="Preciso do seu nome e sobrenome, só com letras (ex.: Marina Alves).")
-    return SlotResult(True, " ".join(p.capitalize() if p.islower() else p for p in bruto.split()))
+    particulas = {"da", "de", "do", "das", "dos", "e"}
+    partes = bruto.split()
+    return SlotResult(True, " ".join(
+        p if (i and p.lower() in particulas) else (p.capitalize() if p.islower() else p) for i, p in enumerate(partes)))
 
 
 def validar_rm(texto: str) -> SlotResult:

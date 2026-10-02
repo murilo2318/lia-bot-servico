@@ -83,13 +83,16 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
             or _re(r"\b(meu|o meu)\s+(agendamento|plantao)\b", t) or _re(r"\baquele horario\b", t):
         return NLUResult("consultar_agendamento", score=1.0)
     if _re(r"\b(agend\w*|marc\w*|reserv\w*)\b.{0,30}\b(plantao|monitoria|horario|atendimento|professor|duvida)", t) \
-            or _re(r"\bplantao de duvidas?\b", t) or t in {"agendar", "quero agendar", "agendar plantao"}:
+            or _re(r"\bplantao de duvidas?\b", t) or t in {"agendar", "quero agendar", "agendar plantao"} \
+            or _re(r"^(quero|queria|gostaria de|posso|pode|vou|da pra)?\s*(agendar|marcar|reservar)\b", t):
         return NLUResult("agendar_plantao", score=1.0)
     if _re(r"\b(quais|que|tem|ha|existe\w*)\b.{0,25}\b(horarios?|plantao|plantoes|vaga\w*)\b.{0,25}(disponive\w*|livres?|\?|$|segunda|terca|quarta|quinta|sexta)", t):
         return NLUResult("disponibilidade", score=1.0)
     if _re(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hey|salve)( lia)?$", t):
         return NLUResult("saudacao", score=1.0)
-    if _re(r"^(tchau|ate mais|ate logo|valeu|obrigad[oa]|brigad[oa]|era so isso|so isso|falou)\b", t) \
+    if (_re(r"^(tchau|ate mais|ate logo|valeu|obrigad[oa]|brigad[oa]|era so isso|so isso|falou)\b", t)
+            or _re(r"^(nao|nada|nao precisa|nada mais|nao e so isso|so isso mesmo)( mais)?"
+                   r"( (obrigad[oa]|valeu|brigad[oa]|era so isso|por enquanto|ta bom|tudo certo))*$", t)) \
             and len(t.split()) <= 6 and "?" not in texto:
         return NLUResult("despedida", score=1.0)
     faq, score = buscar_faq(texto)

@@ -210,6 +210,17 @@ class Orchestrator:
             tr.acoes.append(f"bloqueou entrada ({g.tipo})")
             return
 
+        # 1b. nota de 1 a 5 no chat, logo depois de a Lia pedir (funciona em qualquer lente, sem estrelas)
+        if st.pediu_avaliacao:
+            st.pediu_avaliacao = False
+            m = re.fullmatch(r"\s*(?:nota\s*)?([1-5])\s*(?:estrelas?|/\s*5)?\s*[.!]?\s*", tr.texto.lower())
+            if m:
+                self.store.save_feedback(s.id, int(m.group(1)), "nota dada no chat")
+                tr.intent, tr.route = "avaliacao", "regra"
+                tr.reply = "Obrigada pela nota! Ela ajuda a melhorar a Lia. Se precisar, é só chamar."
+                tr.acoes.append(f"registrou CSAT {m.group(1)} pelo chat")
+                return
+
         nlu = classificar_por_regras(tr.texto, st.ultima_faq)
 
         # 2. oferta de handoff pendente
@@ -226,6 +237,14 @@ class Orchestrator:
         # 2b. resposta à oferta de agendamento feita depois de mostrar a agenda
         if st.oferta_agendamento:
             st.oferta_agendamento = False
+            # o modelo costuma perguntar "qual horário prefere?": aceitar a escolha direto
+            livres = agenda.horarios_livres(self.store.reservados())
+            do_dia = [h for h in livres if st.dia_preferido and st.dia_preferido in normalize_text(h["rotulo"])]
+            escolhido = agenda.escolher_opcao(tr.texto, do_dia or livres) or agenda.escolher_opcao(tr.texto, livres)
+            if escolhido and nlu.intent in {"nao_entendi", "agendar_plantao"}:
+                st.slots["horario"] = escolhido
+                tr.acoes.append(f"escolheu {escolhido['rotulo']} depois de ver a agenda")
+                return self._fluxo_iniciar(s, tr)
             resposta = v.e_confirmacao(tr.texto)
             if resposta is True and nlu.intent in {"nao_entendi", "agendar_plantao"}:
                 tr.acoes.append("aceitou agendar depois de ver a agenda")
@@ -269,7 +288,8 @@ class Orchestrator:
         if nlu.intent == "despedida":
             nome = (st.slots.get("nome") or "").split(" ")[0]
             tr.route = "regra"
-            tr.reply = f"Por nada{', ' + nome if nome else ''}! Bons estudos. Se puder, avalie esta conversa de 1 a 5."
+            tr.reply = f"Por nada{', ' + nome if nome else ''}! Bons estudos. Se puder, avalie esta conversa com uma nota de 1 a 5."
+            st.pediu_avaliacao = True
             return
         if nlu.intent in {"faq", "continuacao"}:
             return self._responder_faq(s, tr, get_faq(nlu.faq_id), usou_memoria=nlu.intent == "continuacao")
@@ -342,7 +362,8 @@ class Orchestrator:
             "parameters": {"type": "object", "properties": {
                 "dia": {"type": "string", "description": "dia da semana (ex.: quinta) ou vazio para todos"}}}}}]
         msgs = [{"role": "system", "content": carregar_prompt(s.prompt_version) +
-                 "\n\nPara perguntas sobre horários de plantão, use SEMPRE a ferramenta consultar_agenda."},
+                 "\n\nPara perguntas sobre horários de plantão, use SEMPRE a ferramenta consultar_agenda. "
+                 "Liste os horários e termine perguntando qual a pessoa prefere."},
                 {"role": "user", "content": tr.texto}]
         dia_pedido = next((d for d in agenda.DIAS if contains_phrase(normalize_text(tr.texto), d)), None)
         livres = agenda.horarios_livres(self.store.reservados(), dia_pedido)
@@ -431,7 +452,11 @@ class Orchestrator:
         tr.reply = self._acolher(tr, "Vamos agendar seu plantão de dúvidas com o professor. " + self._pergunta(s))
 
     def _capturar_oportunista(self, st, texto: str) -> None:
-        """Se a pessoa já mandar e-mail ou 'RM 12345', aproveita sem perguntar de novo."""
+        """Se a pessoa já mandar e-mail, 'RM 12345' ou 'quinta às 18h', aproveita sem perguntar de novo."""
+        if not st.slots.get("horario"):
+            h = agenda.escolher_opcao(texto, agenda.horarios_livres(self.store.reservados()))
+            if h and re.search(r"\d\s*(h|:)", texto.lower()):      # só com hora explícita
+                st.slots["horario"] = h
         if not st.slots.get("email") and (m := v.RE_EMAIL.search(texto)):
             st.slots["email"] = m.group(0).lower()
         if not st.slots.get("rm") and (m := re.search(r"\brm\s*:?\s*(\d{5,6})\b", texto, re.I)):

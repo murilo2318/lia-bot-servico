@@ -61,3 +61,17 @@ def test_mascara_pii():
 def test_despedida_com_agradecimento():
     assert classificar_por_regras("valeu, ajudou muito", None).intent == "despedida"
     assert classificar_por_regras("obrigado! e o que é slot?", None).intent != "despedida"
+
+
+def test_nome_rejeita_frases():
+    assert not validar_nome("quero marcar na quarta").ok
+    assert not validar_nome("não entendi isso").ok
+    assert validar_nome("Ana Souza").ok and validar_nome("me chamo João da Silva").valor == "João da Silva"
+
+
+def test_despedida_com_nao():
+    """Achado nas conversas manuais (Ana, 02/10): 'Não obrigado' depois de 'Posso ajudar em mais algo?'."""
+    for frase in ["Não obrigado", "não, obrigada", "nada mais, valeu", "não precisa", "Não"]:
+        assert classificar_por_regras(frase, None).intent == "despedida", frase
+    assert classificar_por_regras("não entendi", None).intent != "despedida"
+    assert classificar_por_regras("não sei o que é slot", None).intent != "despedida"
