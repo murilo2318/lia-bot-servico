@@ -27,6 +27,7 @@ class NLUResult:
     score: float = 0.0
     origem: str = "regra"          # regra | llm | memoria
     urgente: bool = False
+    apelido: str | None = None     # nome com que o aluno se apresentou
 
 
 def _re(padrao: str, t: str) -> bool:
@@ -104,6 +105,10 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
         if curto and ultima_faq and get_faq(ultima_faq):     # "não entendi" logo depois de uma resposta
             return NLUResult("continuacao", ultima_faq, 1.0, origem="memoria")
         return NLUResult("confusao", score=1.0)
+    m = re.match(r"^(?:(?:oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hey|salve)(?: lia)? )?"
+                 r"(?:eu )?(?:sou (?:a |o )?|me chamo |meu nome e |aqui e (?:a |o )?)([a-z]+)$", t)
+    if m and m.group(1) not in {"aluno", "aluna", "novo", "nova", "eu", "estudante"}:
+        return NLUResult("saudacao", score=1.0, apelido=m.group(1).capitalize())
     if _re(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hey|salve)( lia)?$", t):
         return NLUResult("saudacao", score=1.0)
     agradece = r"(valeu|obrigad[oa]|brigad[oa]|tchau|ate mais|ajudou( muito)?|era isso|era so isso)"

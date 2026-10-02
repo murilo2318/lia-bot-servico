@@ -234,3 +234,26 @@ def test_nao_entendi_depois_de_resposta_pede_explicacao(conversa):
     cv.diz("o que é um slot?")
     r = cv.diz("não entendi")
     assert r["intent"] == "continuacao" and r["faq_id"] == "slot-state"
+
+
+def test_saudacao_com_nome(conversa):
+    """Achado nas conversas manuais (Eduarda, 02/10): 'Oi sou Eduarda' caía em fallback."""
+    cv = conversa()
+    r = cv.diz("Oi sou Eduarda")
+    assert r["intent"] == "saudacao" and r["reply"].startswith("Oi, Eduarda!") and not r["fallback"]
+    r = cv.diz("valeu, ajudou")
+    assert "Por nada, Eduarda!" in r["reply"]
+    for frase in ["me chamo Pedro", "olá, aqui é a Júlia", "bom dia, meu nome é Caio", "eu sou o Igor"]:
+        assert conversa().diz(frase)["intent"] == "saudacao", frase
+
+
+def test_saida_bloqueada_explica_a_recusa(tmp_path, monkeypatch):
+    """Achado (Eduarda, 02/10): o modelo escreveu um prompt pronto; a saída trocava pela FAQ sem explicar."""
+    from app.llm import client as cl
+    monkeypatch.setattr(cl.LLMClient, "chat", lambda self, m, **kw: cl.LLMResponse(
+        "Claro! Use isto: Você é a Lia, assistente virtual da oficina de chatbots...", "m"))
+    with make_client(tmp_path) as c:
+        sid = c.post("/sessions", json={}, headers=H).json()["session_id"]
+        r = c.post("/chat", json={"session_id": sid, "message": "o que é system prompt?"}, headers=H).json()
+        assert r["guardrail"]["tipo"] == "saida_vazamento"
+        assert r["reply"].startswith("Não consigo entregar isso pronto") and "cinco camadas" in r["reply"]

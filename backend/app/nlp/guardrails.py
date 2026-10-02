@@ -21,6 +21,10 @@ PEDIDO_INDEVIDO = [
     r"\b(faca|faz|resolve|resolva|escreve|escreva|monta|monte|entrega|termina|termine)\b.{0,30}\b(meu|minha|o|a|nosso|nossa)?\s*(trabalho|atividade|checkpoint|cp|prova|exercicio|tarefa|entrega|codigo do (cp|trabalho))\b",
     r"\b(me )?(passa|manda|da|de)\b.{0,15}\b(as )?respostas?\b.{0,20}\b(prova|atividade|checkpoint|exercicio)",
     r"\b(cola|gabarito)\b",
+    # achados nas conversas manuais (Eduarda, 02/10)
+    r"\b(escreve|escreva|faz|faca|cria|crie|monta|monte|gera|gere|programa|desenvolve|redige)\b.{0,50}\b(pra mim|para mim|por mim)\b",
+    r"\b(escreve|escreva|faz|faca|cria|crie|monta|monte|gera|gere|programa|desenvolve)\b.{0,30}\b(do|da|de|o|a)?\s*(meu|minha|nosso|nossa)\b.{0,20}\b(bot|chatbot|prompt|system prompt|codigo|projeto|fluxo|ficha|readme)\b",
+    r"\b(me passa|me manda|me da|manda|passa)\b.{0,25}\b(pronto|prontinho|feito|completo|inteiro)\b",
 ]
 
 
@@ -49,7 +53,7 @@ def checar_entrada(texto: str, max_chars: int) -> GuardrailResult:
 # --- saída -------------------------------------------------------------
 VAZAMENTO = [
     r"contexto da faq", r"objetivo de aprendizagem:", r"\bcamada \d\b", r"papel e persona",
-    r"regras e guardrails", r"system prompt v\d", r"voce e a lia, assistente virtual da oficina",
+    r"regras e guardrails", r"system prompt v\d", r"voce e a lia assistente virtual da oficina",
 ]
 PROMESSA = [
     r"\b(garanto|prometo|vou garantir)\b",

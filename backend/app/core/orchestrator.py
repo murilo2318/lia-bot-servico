@@ -299,10 +299,14 @@ class Orchestrator:
             tr.acoes.append("aluno confuso; a Lia propôs um ponto de partida")
             return
         if nlu.intent == "saudacao":
-            tr.route, tr.reply = "regra", self._acolher(tr, f"Oi! Posso te ajudar a {MENU}. O que você precisa?")
+            if nlu.apelido:
+                st.apelido = nlu.apelido
+                tr.acoes.append(f"aluno se apresentou como {nlu.apelido}")
+            quem = f", {st.apelido}" if st.apelido else ""
+            tr.route, tr.reply = "regra", self._acolher(tr, f"Oi{quem}! Posso te ajudar a {MENU}. O que você precisa?")
             return
         if nlu.intent == "despedida":
-            nome = (st.slots.get("nome") or "").split(" ")[0]
+            nome = (st.slots.get("nome") or "").split(" ")[0] or (st.apelido or "")
             tr.route = "regra"
             tr.reply = f"Por nada{', ' + nome if nome else ''}! Bons estudos. Se puder, avalie esta conversa com uma nota de 1 a 5."
             st.pediu_avaliacao = True
@@ -362,6 +366,10 @@ class Orchestrator:
             # guardrail de saída: troca a geração pela resposta curada da FAQ
             tr.guardrail = {"tipo": g.tipo or "saida_vazia", "motivo": g.motivo}
             texto = faq.answer
+            if g.tipo in {"saida_vazamento", "saida_promessa"}:
+                # avisa o porquê, em vez de só repetir a FAQ (achado: conversa da Eduarda)
+                texto = ("Não consigo entregar isso pronto, mas te ajudo a construir. " + faq.answer +
+                         " Quer montar a primeira parte juntos?")
             tr.acoes.append(f"guardrail de saída substituiu a resposta ({g.tipo})")
         elif g.tipo:
             tr.guardrail = {"tipo": g.tipo, "motivo": g.motivo}

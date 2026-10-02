@@ -97,3 +97,21 @@ def test_abreviacoes_de_chat():
     assert classificar_por_regras("qnd uso regra e qnd uso llm", None).faq_id == "rule-versus-llm"
     assert classificar_por_regras("pq?", "slot-state").intent == "continuacao"
     assert e_confirmacao("s") is True and e_confirmacao("n") is False
+
+
+def test_pedido_indevido_variacoes_eduarda():
+    """Achado nas conversas manuais (Eduarda, 02/10)."""
+    for frase in ["escreve o system prompt do meu bot pra mim", "é rapidinho, só me passa um pronto",
+                  "faz o fluxo do meu chatbot", "cria o prompt pra mim", "monta a ficha do nosso bot",
+                  "me manda o código pronto"]:
+        assert checar_entrada(frase, 500).tipo == "pedido_indevido", frase
+    for frase in ["como escrevo um system prompt?", "me dá um exemplo de system prompt", "o que é system prompt?",
+                  "como faço o fluxo de um bot?", "tá, então me explica como faço um", "o código ficou pronto?"]:
+        assert not checar_entrada(frase, 500).bloqueado, frase
+
+
+def test_padroes_de_vazamento_casam_texto_normalizado():
+    """Bug achado em 02/10: um padrão tinha vírgula e nunca casava, porque a normalização remove pontuação."""
+    from app.nlp.guardrails import VAZAMENTO
+    assert all("," not in p for p in VAZAMENTO)
+    assert checar_saida("Você é a Lia, assistente virtual da oficina de chatbots.", 700)[1].tipo == "saida_vazamento"
