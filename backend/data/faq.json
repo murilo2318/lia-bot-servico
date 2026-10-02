@@ -1,46 +1,168 @@
 [
-  {"id": "minimum-checklist", "origem": "build-day",
-   "question": "Qual é o checklist mínimo para o chatbot?",
-   "answer": "O mínimo é: persona e regras, um estado ou slot, memória da conversa, um guardrail ou encaminhamento e uma FAQ.",
-   "keywords": ["checklist", "mínimo", "persona", "regras", "encaminhamento", "faq"]},
-  {"id": "happy-path", "origem": "build-day",
-   "question": "Como começo o happy path?",
-   "answer": "Comece pelo system prompt e por um fluxo bem-sucedido. Faça funcionar antes de decorar e reserve cinco minutos para a demonstração.",
-   "keywords": ["happy path", "caminho feliz", "fluxo", "sucesso", "decorar", "cinco minutos"]},
-  {"id": "slot-state", "origem": "build-day",
-   "question": "O que é um slot ou estado?",
-   "answer": "É um valor capturado e lembrado pelo bot, guardado numa estrutura de dados e não na memória do modelo. Na Lia, o objetivo de aprendizagem e os dados do agendamento de plantão são slots.",
-   "keywords": ["slot", "slots", "estado", "valor", "capturado", "lembrado", "objetivo de aprendizagem"]},
-  {"id": "rule-versus-llm", "origem": "build-day",
-   "question": "Quando uso regra e quando uso LLM?",
-   "answer": "Decisões críticas devem ser determinísticas, feitas por regras: validação, captura de slots, ações e guardrails. O LLM fica responsável por entender a linguagem e conversar.",
-   "keywords": ["regra", "regras", "llm", "decisões", "críticas", "determinísticas", "hibrido"]},
-  {"id": "knowledge-base", "origem": "build-day",
-   "question": "Para que serve a base de conhecimento?",
-   "answer": "A FAQ ancora as respostas como uma pequena base de conhecimento antes de usar RAG. Se a resposta não está na base, o bot admite que não sabe em vez de inventar.",
-   "keywords": ["base de conhecimento", "faq", "rag", "âncora", "ancorar", "alucinação"]},
-  {"id": "testing-demo", "origem": "build-day",
-   "question": "Como testar e preparar a demo?",
-   "answer": "Converse de verdade, teste o happy path, o fallback e o handoff, e prepare a demonstração.",
-   "keywords": ["testar", "teste", "testes", "demo", "demonstrar", "demonstração", "apresentação"]},
-  {"id": "future-metrics", "origem": "build-day",
-   "question": "Quais métricas devo acompanhar?",
-   "answer": "Acompanhe taxa de contenção, taxa de fallback, taxa de handoff, mensagens por conversa e satisfação (CSAT). Contenção alta sem satisfação pode esconder usuários que desistiram.",
-   "keywords": ["métricas", "métrica", "contenção", "resolução", "turnos", "csat", "medir"]},
-  {"id": "system-prompt", "origem": "cp",
-   "question": "O que é o system prompt e como escrevê-lo?",
-   "answer": "É o DNA do bot, enviado no início de toda chamada. Tem cinco camadas: papel ou persona, objetivo e capacidades, regras e guardrails, tom e formato, e exemplos (few-shot).",
-   "keywords": ["system prompt", "prompt de sistema", "cinco camadas", "camadas", "few shot", "instruções"]},
-  {"id": "memory-window", "origem": "cp",
-   "question": "Como funciona a memória de um chatbot LLM?",
-   "answer": "O LLM não guarda nada entre chamadas. A memória é o histórico reenviado a cada turno, controlado por uma janela deslizante ou por sumarização. Memória é a conversa; estado são os dados.",
-   "keywords": ["memória", "janela", "histórico", "contexto", "sumarização", "esquece", "lembrar"]},
-  {"id": "guardrails-handoff", "origem": "cp",
-   "question": "O que são guardrails e quando transferir para humano?",
-   "answer": "Guardrails são limites em código na entrada e na saída do bot. O handoff transfere para um humano em temas sensíveis, frustração, pedido explícito ou falhas repetidas, passando um resumo para ninguém repetir tudo.",
-   "keywords": ["guardrail", "guardrails", "handoff", "transferir", "transferência", "prompt injection", "injection"]},
-  {"id": "conversation-design", "origem": "cp",
-   "question": "O que é um bom design conversacional?",
-   "answer": "É projetar a conversa: persona clara, capacidades ditas no início, uma pergunta por vez, fallback com opções e rota de fuga para humano. As máximas de Grice (qualidade, quantidade, relação e modo) servem de régua.",
-   "keywords": ["design conversacional", "design", "grice", "máximas", "fallback", "persona do bot"]}
+ {
+  "id": "minimum-checklist",
+  "origem": "build-day",
+  "question": "Qual é o checklist mínimo para o chatbot?",
+  "answer": "O mínimo é: persona e regras, um estado ou slot, memória da conversa, um guardrail ou encaminhamento e uma FAQ.",
+  "keywords": [
+   "checklist",
+   "mínimo",
+   "persona",
+   "regras",
+   "encaminhamento",
+   "faq"
+  ]
+ },
+ {
+  "id": "happy-path",
+  "origem": "build-day",
+  "question": "O que é o happy path e como começo?",
+  "answer": "Happy path é o caminho ideal da conversa: o usuário faz o que se espera e o bot conclui a tarefa sem desvios, como agendar um plantão do início ao fim. Para começar, escreva o system prompt e um fluxo bem-sucedido com diálogos de exemplo; faça funcionar antes de decorar e reserve cinco minutos para a demonstração.",
+  "keywords": [
+   "caminho feliz",
+   "caminho ideal",
+   "cinco minutos",
+   "decorar",
+   "fluxo",
+   "happy path",
+   "sucesso"
+  ]
+ },
+ {
+  "id": "slot-state",
+  "origem": "build-day",
+  "question": "O que é um slot ou estado?",
+  "answer": "É um valor capturado e lembrado pelo bot, guardado numa estrutura de dados e não na memória do modelo. Na Lia, o objetivo de aprendizagem e os dados do agendamento de plantão são slots.",
+  "keywords": [
+   "slot",
+   "slots",
+   "estado",
+   "valor",
+   "capturado",
+   "lembrado",
+   "objetivo de aprendizagem"
+  ]
+ },
+ {
+  "id": "rule-versus-llm",
+  "origem": "build-day",
+  "question": "Quando uso regra e quando uso LLM?",
+  "answer": "Decisões críticas devem ser determinísticas, feitas por regras: validação, captura de slots, ações e guardrails. O LLM fica responsável por entender a linguagem e conversar.",
+  "keywords": [
+   "regra",
+   "regras",
+   "llm",
+   "decisões",
+   "críticas",
+   "determinísticas",
+   "hibrido"
+  ]
+ },
+ {
+  "id": "knowledge-base",
+  "origem": "build-day",
+  "question": "Para que serve a base de conhecimento e o que é RAG?",
+  "answer": "A FAQ ancora as respostas como uma pequena base de conhecimento. RAG (geração aumentada por recuperação) é o passo seguinte: o bot busca os trechos mais relevantes dos documentos e gera a resposta a partir deles, citando a fonte. Nos dois casos, se a resposta não está na base, o bot admite que não sabe em vez de inventar.",
+  "keywords": [
+   "alucinação",
+   "ancorar",
+   "base de conhecimento",
+   "documentos",
+   "faq",
+   "inventa",
+   "inventar",
+   "invente",
+   "rag",
+   "recuperacao",
+   "âncora"
+  ]
+ },
+ {
+  "id": "testing-demo",
+  "origem": "build-day",
+  "question": "Como testar e preparar a demo?",
+  "answer": "Converse de verdade, teste o happy path, o fallback e o handoff, e prepare a demonstração.",
+  "keywords": [
+   "testar",
+   "teste",
+   "testes",
+   "demo",
+   "demonstrar",
+   "demonstração",
+   "apresentação"
+  ]
+ },
+ {
+  "id": "future-metrics",
+  "origem": "build-day",
+  "question": "Quais métricas devo acompanhar?",
+  "answer": "Acompanhe taxa de contenção, taxa de fallback, taxa de handoff, mensagens por conversa e satisfação (CSAT). Contenção alta sem satisfação pode esconder usuários que desistiram.",
+  "keywords": [
+   "métricas",
+   "métrica",
+   "contenção",
+   "resolução",
+   "turnos",
+   "csat",
+   "medir"
+  ]
+ },
+ {
+  "id": "system-prompt",
+  "origem": "cp",
+  "question": "O que é o system prompt e como escrevê-lo?",
+  "answer": "É o DNA do bot, enviado no início de toda chamada. Tem cinco camadas: papel ou persona, objetivo e capacidades, regras e guardrails, tom e formato, e exemplos (few-shot).",
+  "keywords": [
+   "system prompt",
+   "prompt de sistema",
+   "cinco camadas",
+   "camadas",
+   "few shot",
+   "instruções"
+  ]
+ },
+ {
+  "id": "memory-window",
+  "origem": "cp",
+  "question": "Como funciona a memória de um chatbot LLM?",
+  "answer": "O LLM não guarda nada entre chamadas. A memória é o histórico reenviado a cada turno, controlado por uma janela deslizante ou por sumarização. Memória é a conversa; estado são os dados.",
+  "keywords": [
+   "memória",
+   "janela",
+   "histórico",
+   "contexto",
+   "sumarização",
+   "esquece",
+   "lembrar"
+  ]
+ },
+ {
+  "id": "guardrails-handoff",
+  "origem": "cp",
+  "question": "O que são guardrails e quando transferir para humano?",
+  "answer": "Guardrails são limites em código na entrada e na saída do bot. O handoff transfere para um humano em temas sensíveis, frustração, pedido explícito ou falhas repetidas, passando um resumo para ninguém repetir tudo.",
+  "keywords": [
+   "guardrail",
+   "guardrails",
+   "handoff",
+   "transferir",
+   "transferência",
+   "prompt injection",
+   "injection"
+  ]
+ },
+ {
+  "id": "conversation-design",
+  "origem": "cp",
+  "question": "O que é um bom design conversacional?",
+  "answer": "É projetar a conversa: persona clara, capacidades ditas no início, uma pergunta por vez, fallback com opções e rota de fuga para humano. As máximas de Grice (qualidade, quantidade, relação e modo) servem de régua.",
+  "keywords": [
+   "design conversacional",
+   "design",
+   "grice",
+   "máximas",
+   "fallback",
+   "persona do bot"
+  ]
+ }
 ]
