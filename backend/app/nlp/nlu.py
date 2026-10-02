@@ -90,7 +90,10 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
         return NLUResult("disponibilidade", score=1.0)
     if _re(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hey|salve)( lia)?$", t):
         return NLUResult("saudacao", score=1.0)
+    agradece = r"(valeu|obrigad[oa]|brigad[oa]|tchau|ate mais|ajudou( muito)?|era isso|era so isso)"
     if (_re(r"^(tchau|ate mais|ate logo|valeu|obrigad[oa]|brigad[oa]|era so isso|so isso|falou)\b", t)
+            or _re(rf"^(entendi|ok|beleza|blz|show|perfeito|otimo|massa|top|certo|ah|ahh|legal|boa)( (entao|agora|tudo))?"
+                   rf"( {agradece})+( (lia|demais|mesmo))?$", t)
             or _re(r"^(nao|nada|nao precisa|nada mais|nao e so isso|so isso mesmo)( mais)?"
                    r"( (obrigad[oa]|valeu|brigad[oa]|era so isso|por enquanto|ta bom|tudo certo))*$", t)) \
             and len(t.split()) <= 6 and "?" not in texto:

@@ -75,3 +75,11 @@ def test_despedida_com_nao():
         assert classificar_por_regras(frase, None).intent == "despedida", frase
     assert classificar_por_regras("não entendi", None).intent != "despedida"
     assert classificar_por_regras("não sei o que é slot", None).intent != "despedida"
+
+
+def test_despedida_com_entendi():
+    """Achado nas conversas manuais (Bruno, 02/10): 'entendi, valeu!' caía em fallback."""
+    for frase in ["entendi, valeu!", "ok obrigado", "beleza, valeu lia", "show, ajudou muito", "perfeito, obrigada"]:
+        assert classificar_por_regras(frase, None).intent == "despedida", frase
+    assert classificar_por_regras("entendi", None).intent != "despedida"            # sem agradecer: segue a conversa
+    assert classificar_por_regras("ok, e o que é slot?", None).intent != "despedida"
