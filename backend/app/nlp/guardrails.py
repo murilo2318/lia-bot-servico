@@ -15,6 +15,10 @@ INJECTION = [
     r"\b(ignor\w*|esquec\w*|desconsider\w*|descart\w*)\b.{0,40}\b(instruc\w*|regras?|prompt|orientac\w*|diretriz\w*)",
     r"\b(mostr\w*|revel\w*|repit\w*|exib\w*|imprim\w*|copi\w*|diga|conte|passa\w*|qual e)\b.{0,30}\b(seu|teu|suas|tuas)\s+(proprio\s+|proprias\s+)?(system prompt|prompt|instruc\w*|regras)",
     r"\b(voce agora e|a partir de agora voce|finja que|faca de conta que|aja como|atue como|roleplay)\b",
+    # achado nas conversas manuais (Igor, 02/10): imperativo informal e variações de "fingir"
+    r"\b(finge|finja|fingir|finjo|faz de conta|imagina que voce|imagine que voce|se pass[ae] p(?:or|el[oa])|"
+    r"interpreta|interprete|encarna|incorpora|vira|seja)\b.{0,25}?\b(voce e|voce eh|o professor|a professora|"
+    r"professor|outro|outra|um assistente|uma ia|humano|humana|sem regras|sem restricoes)\b",
     r"\b(modo (desenvolvedor|dev|admin|deus)|jailbreak|dan mode|sem restric\w*|sem filtro)\b",
     r"\b(ignore (all|previous)|developer mode)\b",
 ]
