@@ -29,7 +29,9 @@ Ela agora:
   sensível ou quando ela falha duas vezes seguidas;
 - recusa ataques ao prompt e pedidos para fazer a atividade pelo aluno.
 
-A ficha completa está em [`docs/ficha_do_bot.md`](docs/ficha_do_bot.md).
+A ficha completa está em [`docs/ficha_do_bot.md`](docs/ficha_do_bot.md). As métricas estão em
+[`docs/metricas.md`](docs/metricas.md); os problemas encontrados nas conversas manuais e as correções, em
+[`docs/rodada1_achados.md`](docs/rodada1_achados.md).
 
 ## 3. Arquitetura
 
@@ -115,8 +117,8 @@ Usamos versões fixas de propósito: um alias "-latest" troca de modelo, e de co
   (respostas de FAQ, intenções que as regras não entendem e consulta à agenda). Fluxo, validação, handoff e
   guardrails não gastam token.
 - **Latência observada:** o Groq respondeu entre 1,6 e 4,6 s por chamada, contra 7 a 15 s do Gemini no mesmo
-  dia, e foi isso que decidiu o modelo principal. ✏️ Por turno, a média ficou em ___ ms e o p95 em ___ ms
-  (tabela do A/B em `docs/metricas.md`).
+  dia, e foi isso que decidiu o modelo principal. Por turno, nas conversas manuais, a média ficou em 297 ms e o
+  p95 em 1,1 s, porque 83% das intenções foram resolvidas por regra, sem chamar o modelo (`docs/metricas.md`).
 - **Qualidade em português:** ✏️ (uma frase do grupo, comparando com a discussão de modelos em PT do 1º semestre
   e com o que o juiz e as conversas mostraram).
 
@@ -191,7 +193,7 @@ Abre em http://localhost:7860.
 
 ```bash
 cd backend
-python -m pytest -q                        # 41 testes, incluindo T1–T8, sem chave e sem internet
+python -m pytest -q                        # 198 testes, incluindo T1–T8, sem chave e sem internet
 python scripts/ab_test.py --julgar         # A/B v1 × v2 com LLM-as-judge (backend rodando)
 ```
 

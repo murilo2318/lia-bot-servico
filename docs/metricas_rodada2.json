@@ -1,0 +1,78 @@
+{
+    "filtros": {
+        "prompt_version": null,
+        "provider": null
+    },
+    "conversas": 10,
+    "turnos_usuario": 65,
+    "taxa_contencao": 0.8,
+    "taxa_fallback": 0.0462,
+    "taxa_handoff": 0.2,
+    "mensagens_por_conversa": 6.5,
+    "taxa_faq_hit": 0.2462,
+    "agendamentos_concluidos": 2,
+    "handoff_por_motivo": {
+        "frustracao": 1,
+        "tema_sensivel": 1
+    },
+    "fallback_por_motivo": {
+        "fora_escopo": 2,
+        "fora_da_base": 1
+    },
+    "intencoes": {
+        "informar_dado": 10,
+        "faq": 10,
+        "despedida": 8,
+        "continuacao": 6,
+        "saudacao": 5,
+        "agendar_plantao": 3,
+        "confirmar_agendamento": 3,
+        "recusa_oferta": 3,
+        "pedido_indevido": 2,
+        "fora_escopo": 2,
+        "dado_invalido": 2,
+        "ataque_prompt": 2,
+        "disponibilidade": 1,
+        "confusao": 1,
+        "frustracao": 1,
+        "cancelar": 1,
+        "tema_sensivel": 1,
+        "capacidades": 1,
+        "fora_da_base": 1,
+        "identidade": 1,
+        "repetir": 1
+    },
+    "nlu_por_origem": {
+        "regra": 54,
+        "memoria": 6,
+        "llm": 5
+    },
+    "eventos_guardrail": {
+        "pedido_indevido": 2,
+        "prompt_injection": 2
+    },
+    "sentimento": {
+        "neutro": 55,
+        "positivo": 8,
+        "negativo": 2
+    },
+    "latencia_ms": {
+        "media": 297.38,
+        "p95": 1104
+    },
+    "tokens": {
+        "entrada": 16349,
+        "saida": 3083
+    },
+    "csat": {
+        "respostas": 10,
+        "media_geral": 3.6,
+        "media_conversas_contidas": 4.0,
+        "media_conversas_com_handoff": 2.0
+    },
+    "ultimos_fallbacks": [
+        "Cama 3",
+        "quem ganhou o jogo ontem?",
+        "como coloco meu bot no WhatsApp?"
+    ]
+}

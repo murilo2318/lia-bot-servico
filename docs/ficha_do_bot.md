@@ -157,8 +157,10 @@ conversa, os slots e as reservas.
 
 - **Canal:** chat em Streamlit (aluno) e painel em Gradio (professor), ambos só consumindo a API.
 - **NLU:** intenções `faq`, `continuacao`, `agendar_plantao`, `consultar_agendamento`, `cancelar`,
-  `disponibilidade`, `falar_professor`, `tema_sensivel`, `saudacao`, `despedida`, `fora_da_base`,
-  `fora_escopo`, `nao_entendi`; entidades nome, RM, e-mail, tema e horário.
+  `disponibilidade`, `falar_professor`, `tema_sensivel`, `saudacao`, `despedida`, `recusa_oferta`, `confusao`,
+  `capacidades`, `identidade`, `repetir`, `elogio`, `ofensa`, `fora_da_base`, `fora_escopo`, `nao_entendi`;
+  entidades nome, RM, e-mail, tema e horário. As expressões curtas de cada categoria ficam em
+  `data/variacoes.json` (cerca de 580, com abreviações de chat expandidas antes da comparação).
 - **Estado:** slots (objetivo, nome, RM, e-mail, horário, protocolo), etapa do fluxo e contadores de fallback e
   de frustração, no SQLite, por `session_id`.
 - **Memória:** janela deslizante de 6 turnos mais resumo rolante do histórico antigo.
