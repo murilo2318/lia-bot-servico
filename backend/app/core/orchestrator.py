@@ -241,12 +241,12 @@ class Orchestrator:
             livres = agenda.horarios_livres(self.store.reservados())
             do_dia = [h for h in livres if st.dia_preferido and st.dia_preferido in normalize_text(h["rotulo"])]
             escolhido = agenda.escolher_opcao(tr.texto, do_dia or livres) or agenda.escolher_opcao(tr.texto, livres)
-            if escolhido and nlu.intent in {"nao_entendi", "agendar_plantao"}:
+            if escolhido and nlu.intent in {"nao_entendi", "agendar_plantao", "aceite_sem_contexto"}:
                 st.slots["horario"] = escolhido
                 tr.acoes.append(f"escolheu {escolhido['rotulo']} depois de ver a agenda")
                 return self._fluxo_iniciar(s, tr)
             resposta = v.e_confirmacao(tr.texto)
-            if resposta is True and nlu.intent in {"nao_entendi", "agendar_plantao"}:
+            if resposta is True and nlu.intent in {"nao_entendi", "agendar_plantao", "aceite_sem_contexto", "continuacao"}:
                 tr.acoes.append("aceitou agendar depois de ver a agenda")
                 return self._fluxo_iniciar(s, tr)
             if resposta is False:
@@ -282,6 +282,22 @@ class Orchestrator:
             return self._consultar_agendamento(s, tr)
         if nlu.intent == "disponibilidade":
             return self._disponibilidade(s, tr)
+        if nlu.intent == "recusa_oferta":
+            tr.route = "regra"
+            tr.reply = "Tudo bem! Se surgir outra dúvida, é só mandar."
+            return
+        if nlu.intent == "aceite_sem_contexto":
+            tr.route = "regra"
+            tr.reply = f"Claro! Posso te ajudar a {MENU}. O que você precisa?"
+            return
+        if nlu.intent == "confusao":
+            tr.route = "regra"
+            st.ultima_faq = "minimum-checklist"          # um "sim" em seguida continua por aqui
+            tr.reply = ("Entendo, e tudo bem se sentir assim no começo. Vamos por partes: a oficina é sobre montar um "
+                        "bot com persona e regras, um slot, memória, uma FAQ e um guardrail ou handoff. Quer começar "
+                        "pelo checklist mínimo, ou prefere que eu chame o professor?")
+            tr.acoes.append("aluno confuso; a Lia propôs um ponto de partida")
+            return
         if nlu.intent == "saudacao":
             tr.route, tr.reply = "regra", self._acolher(tr, f"Oi! Posso te ajudar a {MENU}. O que você precisa?")
             return

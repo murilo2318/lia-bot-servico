@@ -6,7 +6,7 @@ aqui e salvo numa estrutura no servidor (memory/store.py).
 import re
 from dataclasses import dataclass
 
-from app.nlp.text import normalize_text
+from app.nlp.text import expandir_abreviacoes, normalize_text
 
 RE_EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 RE_EMAIL_LOOSE = re.compile(r"\S+@\S*|\S+\.(?:com|br)\S*", re.IGNORECASE)
@@ -67,7 +67,7 @@ def mascarar_pii(texto: str | None) -> str | None:
 
 
 def e_confirmacao(texto: str) -> bool | None:
-    t = normalize_text(texto)
+    t = expandir_abreviacoes(normalize_text(texto))
     if re.fullmatch(r"(sim|s|isso|pode|confirmo|confirmar|confirma|ok|beleza|pode sim|sim pode|claro|isso mesmo)( pode| confirma| por favor)?", t):
         return True
     if re.fullmatch(r"(nao|n|nao quero|negativo|melhor nao|agora nao)( obrigad[oa])?", t):

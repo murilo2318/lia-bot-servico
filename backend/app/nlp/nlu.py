@@ -10,7 +10,8 @@ import re
 from dataclasses import dataclass
 
 from app.knowledge.faq import buscar_faq, get_faq, load_faq
-from app.nlp.text import normalize_text
+from app.nlp.text import expandir_abreviacoes, normalize_text
+from app.nlp.variacoes import categoria
 
 INTENCOES = [
     "saudacao", "despedida", "faq", "continuacao", "agendar_plantao", "consultar_agendamento",
@@ -71,7 +72,7 @@ def continuacao(t: str) -> bool:
 
 
 def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
-    t = normalize_text(texto)
+    t = expandir_abreviacoes(normalize_text(texto))
     if pedido_de_humano(t):
         return NLUResult("falar_professor", score=1.0)
     sensivel, urgente = tema_sensivel(t)
@@ -88,6 +89,21 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
         return NLUResult("agendar_plantao", score=1.0)
     if _re(r"\b(quais|que|tem|ha|existe\w*)\b.{0,25}\b(horarios?|plantao|plantoes|vaga\w*)\b.{0,25}(disponive\w*|livres?|\?|$|segunda|terca|quarta|quinta|sexta)", t):
         return NLUResult("disponibilidade", score=1.0)
+    # expressões curtas do arquivo data/variacoes.json (comparação com a mensagem inteira)
+    cat = categoria(texto)
+    if cat == "despedida":
+        return NLUResult("despedida", score=1.0)
+    if cat == "recusa":
+        return NLUResult("recusa_oferta", score=1.0)
+    if cat == "aceite":
+        if ultima_faq and get_faq(ultima_faq):
+            return NLUResult("continuacao", ultima_faq, 1.0, origem="memoria")
+        return NLUResult("aceite_sem_contexto", score=1.0)
+    if cat == "confusao":
+        curto = t in {"nao entendi", "nao entendo", "num entendi", "nao to entendendo", "nao estou entendendo"}
+        if curto and ultima_faq and get_faq(ultima_faq):     # "não entendi" logo depois de uma resposta
+            return NLUResult("continuacao", ultima_faq, 1.0, origem="memoria")
+        return NLUResult("confusao", score=1.0)
     if _re(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hey|salve)( lia)?$", t):
         return NLUResult("saudacao", score=1.0)
     agradece = r"(valeu|obrigad[oa]|brigad[oa]|tchau|ate mais|ajudou( muito)?|era isso|era so isso)"
@@ -98,7 +114,7 @@ def classificar_por_regras(texto: str, ultima_faq: str | None) -> NLUResult:
                    r"( (obrigad[oa]|valeu|brigad[oa]|era so isso|por enquanto|ta bom|tudo certo))*$", t)) \
             and len(t.split()) <= 6 and "?" not in texto:
         return NLUResult("despedida", score=1.0)
-    faq, score = buscar_faq(texto)
+    faq, score = buscar_faq(t)
     if faq:
         return NLUResult("faq", faq.id, float(score))
     if ultima_faq and get_faq(ultima_faq) and continuacao(t):

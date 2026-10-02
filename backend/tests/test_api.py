@@ -198,3 +198,39 @@ def test_nota_no_chat_vira_csat(client, conversa):
     assert client.get("/metrics", headers=H).json()["csat"]["media_geral"] == 3
     r = cv.diz("3")                                # fora do contexto, '3' não é nota
     assert r["intent"] != "avaliacao"
+
+
+def test_variacoes_das_conversas_manuais(conversa):
+    """Os quatro casos reais de 02/10, agora cobertos por data/variacoes.json."""
+    # Bruno: aceitou a oferta do modelo com "Sim"
+    cv = conversa()
+    cv.diz("qual a diferença entre memória e estado?")
+    r = cv.diz("Sim")
+    assert r["intent"] == "continuacao" and not r["fallback"]
+    # Carla: "n precisa" e depois "vlw"
+    cv = conversa()
+    cv.diz("blz e o tal do guardrail?")
+    r = cv.diz("n precisa")
+    assert r["intent"] == "recusa_oferta" and not r["fallback"] and "avalie" not in r["reply"]
+    r = cv.diz("vlw")
+    assert r["intent"] == "despedida" and "1 a 5" in r["reply"]
+    # Diego: confusão é acolhida; a segunda mensagem negativa leva ao professor
+    cv = conversa()
+    r = cv.diz("não tô entendendo nada dessa oficina")
+    assert r["intent"] == "confusao" and r["sentiment"]["label"] == "negativo" and not r["fallback"]
+    r = cv.diz("já tentei de novo e continuo perdido, isso não ajuda")
+    assert r["handoff"]["active"] and r["handoff"]["reason"] == "frustracao"
+
+
+def test_confuso_aceita_comecar_pelo_checklist(conversa):
+    cv = conversa()
+    cv.diz("tô boiando")
+    r = cv.diz("sim")
+    assert r["intent"] == "continuacao" and r["faq_id"] == "minimum-checklist"
+
+
+def test_nao_entendi_depois_de_resposta_pede_explicacao(conversa):
+    cv = conversa()
+    cv.diz("o que é um slot?")
+    r = cv.diz("não entendi")
+    assert r["intent"] == "continuacao" and r["faq_id"] == "slot-state"

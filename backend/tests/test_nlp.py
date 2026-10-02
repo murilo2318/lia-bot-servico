@@ -71,8 +71,10 @@ def test_nome_rejeita_frases():
 
 def test_despedida_com_nao():
     """Achado nas conversas manuais (Ana, 02/10): 'Não obrigado' depois de 'Posso ajudar em mais algo?'."""
-    for frase in ["Não obrigado", "não, obrigada", "nada mais, valeu", "não precisa", "Não"]:
+    for frase in ["Não obrigado", "não, obrigada", "nada mais, valeu"]:
         assert classificar_por_regras(frase, None).intent == "despedida", frase
+    for frase in ["não precisa", "Não", "n precisa", "agora não"]:                 # recusa a oferta, sem encerrar
+        assert classificar_por_regras(frase, None).intent == "recusa_oferta", frase
     assert classificar_por_regras("não entendi", None).intent != "despedida"
     assert classificar_por_regras("não sei o que é slot", None).intent != "despedida"
 
@@ -83,3 +85,15 @@ def test_despedida_com_entendi():
         assert classificar_por_regras(frase, None).intent == "despedida", frase
     assert classificar_por_regras("entendi", None).intent != "despedida"            # sem agradecer: segue a conversa
     assert classificar_por_regras("ok, e o que é slot?", None).intent != "despedida"
+
+
+def test_abreviacoes_de_chat():
+    """Achado nas conversas manuais (Carla, 02/10): 'n precisa' e 'vlw' caíam em fallback."""
+    from app.nlp.validators import e_confirmacao
+    assert classificar_por_regras("n precisa", None).intent == "recusa_oferta"
+    assert classificar_por_regras("vlw", None).intent == "despedida"
+    assert classificar_por_regras("blz, vlw", None).intent == "despedida"
+    assert classificar_por_regras("oq é slot msm?", None).faq_id == "slot-state"
+    assert classificar_por_regras("qnd uso regra e qnd uso llm", None).faq_id == "rule-versus-llm"
+    assert classificar_por_regras("pq?", "slot-state").intent == "continuacao"
+    assert e_confirmacao("s") is True and e_confirmacao("n") is False

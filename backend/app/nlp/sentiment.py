@@ -7,7 +7,7 @@ do bot no orquestrador (tom de acolhimento e antecipação do handoff).
 """
 from dataclasses import dataclass
 
-from app.nlp.text import contains_phrase, normalize_text
+from app.nlp.text import contains_phrase, expandir_abreviacoes, normalize_text
 
 NEGATIVOS = {
     "nao entendi": 1.0, "nao entendo": 1.0, "nao consigo": 1.0, "nao funciona": 1.0,
@@ -17,6 +17,8 @@ NEGATIVOS = {
     "irritada": 1.5, "frustrado": 1.5, "frustrada": 1.5, "cansado": 0.8, "cansada": 0.8,
     "nao aguento": 1.5, "de novo": 0.5, "ja tentei": 1.0, "nada funciona": 1.5,
     "nao ajuda": 1.5, "nao ajudou": 1.5, "voce nao entende": 1.5, "que droga": 1.5,
+    "nao to entendendo": 1.0, "nao estou entendendo": 1.0, "boiando": 1.0, "boiei": 1.0, "me perdi": 1.0,
+    "nao sei o que fazer": 1.0, "nao faco ideia": 0.8, "socorro": 1.0, "nao consigo acompanhar": 1.0,
 }
 FRUSTRACAO_FORTE = {"desisto", "desistir", "cansei", "to desistindo", "nao aguento mais", "chega"}
 POSITIVOS = {
@@ -34,7 +36,7 @@ class Sentimento:
 
 
 def analisar_sentimento(texto: str) -> Sentimento:
-    t = normalize_text(texto)
+    t = expandir_abreviacoes(normalize_text(texto))
     neg = sum(p for termo, p in NEGATIVOS.items() if contains_phrase(t, termo))
     pos = sum(p for termo, p in POSITIVOS.items() if contains_phrase(t, termo))
     # "entendi" dentro de "nao entendi" não é positivo

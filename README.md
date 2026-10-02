@@ -210,6 +210,13 @@ de milissegundos. Quando nenhuma regra casa, o LLM classifica a mensagem com sa�
 fora do escopo e não entendi. Isso reduz os fallbacks de paráfrases sem entregar ao modelo as intenções críticas.
 Evidência: conversa E2 do A/B e o gráfico "quem classificou a intenção" no painel de métricas.
 
+**Variações de linguagem como dados.** Nas conversas manuais, várias respostas curtas e naturais caíam em
+fallback ("n precisa", "vlw", "Sim" depois de uma oferta, "não tô entendendo nada"). Em vez de remendar o código
+caso a caso, as expressões ficam em `backend/data/variacoes.json`, separadas em despedida, recusa, aceite e
+confusão (cerca de 240 no total). O código normaliza acentos, expande abreviações de chat (n → não, vlw → valeu,
+qnd → quando) e compara com a mensagem inteira, para "não" não capturar "não sei o que é slot". Qualquer pessoa
+do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
+
 **3. O agendamento é um fluxo determinístico; o LLM só consulta a agenda.** Horário de plantão é compromisso
 com o professor, então nunca pode ser inventado. Os slots são validados por regex e a confirmação é por regra.
 Quando o aluno pergunta "tem horário na quinta?", o LLM decide chamar a ferramenta `consultar_agenda` (function
