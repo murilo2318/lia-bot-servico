@@ -9,9 +9,11 @@ Checkpoint integrado de Front-end e PLN · FIAP · 2º semestre de 2026
 | Nome | RM |
 |---|---|
 | Murilo Benhossi | 562358 |
-| ✏️ | ✏️ |
-| ✏️ | ✏️ |
-| ✏️ | ✏️ |
+| Nicolas Lemos Ribeiro | 553273 |
+| Ricardo de Paiva Melo | 565522 |
+| Luís Fernando de Oliveira Salgado | 561401 |
+| Pedro Leal Murad | 565460 |
+| Jonas Alaf | 566479 |
 
 ## 2. O caso e o bot
 
