@@ -225,7 +225,9 @@ elogio e ofensa), cada uma com um comportamento próprio. O código normaliza ac
 é slot". As palavras-chave da FAQ também ganharam sinônimos e conjugações ("alucine", "esquece", "indicadores").
 Qualquer pessoa do grupo pode ensinar uma variação nova editando o JSON, sem mexer em código.
 `tests/test_variacoes.py` mede essa cobertura com 119 frases escritas de forma livre (121 testes no total) e
-garante que nenhuma expressão está em duas categorias. Com isso, o roteiro do A/B passou a 100% também nas paráfrases.
+garante que nenhuma expressão está em duas categorias. A/B v2 com o modelo real, sem juiz, em 03/10/2026
+([`ab_20261003_1849.md`](backend/scripts/resultados/ab_20261003_1849.md)): 18 conversas, acerto do roteiro 100%,
+acerto em paráfrases 100%, fallback 6%, latência média 166 ms, nenhuma verificação falhou.
 
 **Robustez a erros de digitação e classificador LLM com confiança.** Uma revisão da arquitetura apontou que a
 camada flexível era estreita: erros como "slto" ou "profssor" escapavam das regras, e o classificador LLM só podia

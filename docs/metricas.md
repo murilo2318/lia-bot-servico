@@ -40,8 +40,9 @@
 | v2 | 78% | 9% | 22% | 4,33 | 100% | 50% | 746 ms | 4,94 | 5,00 | 4,83 | 4,89 | 4,56 |
 
 Contenção e handoff aqui refletem o desenho do roteiro (4 das 18 conversas provocam handoff de propósito). Na
-rodada anterior do mesmo A/B, a fidelidade foi 4,50 (v1) × 4,22 (v2), com a ordem invertida. Depois da ampliação de
-linguagem e da base, o roteiro (v2, sem juiz) passou a 100% também nas paráfrases, com fallback de 6%.
+rodada anterior do mesmo A/B, a fidelidade foi 4,50 (v1) × 4,22 (v2), com a ordem invertida. A/B v2 com o modelo real,
+sem juiz, em 03/10/2026 (`backend/scripts/resultados/ab_20261003_1849.md`): 18 conversas, acerto do roteiro 100%,
+acerto em paráfrases 100%, fallback 6%, latência média 166 ms, nenhuma verificação falhou.
 
 ## 4. Leitura crítica
 
