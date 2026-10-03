@@ -1,7 +1,5 @@
 # Relatório de métricas — Lia
 
-> ✏️ As seções 4 e 5 são escritas pelo grupo. Apaguem esta nota e as perguntas-guia antes de entregar.
-
 ## 1. Como os dados foram gerados
 
 - **Modelo:** `openai/gpt-oss-120b` no Groq (bot), `gemini-3.5-flash-lite` como reserva, `qwen/qwen3.8-27b` no
@@ -46,21 +44,22 @@ acerto em paráfrases 100%, fallback 6%, latência média 166 ms, nenhuma verifi
 
 ## 4. Leitura crítica
 
-✏️ Um insight que os dados mostram, em um parágrafo. Perguntas que podem ajudar:
-- O CSAT das conversas com handoff (2,0) é metade do das contidas (4,0). O handoff aconteceu na hora certa? O que
-  o aluno que é transferido sente, e o que a Lia poderia dizer ou fazer de diferente?
-- 83% das intenções foram resolvidas por regra. O que isso diz sobre custo, latência e previsibilidade? E sobre
-  onde está o comportamento da Lia: no prompt ou no código? (Compare com o empate entre v1 e v2.)
-- A fidelidade à base é o critério mais fraco do juiz. Nas conversas do Bruno, cada "sim" a uma oferta criada
-  pelo modelo levou a conteúdo inventado. Por que as respostas sempre terminam com uma oferta?
-- A primeira versão do juiz deu 5,0 em quase tudo; com a FAQ como referência, passou a apontar problemas reais,
-  e também alguns falsos positivos. O que isso ensina sobre LLM-as-judge?
+Trocar o prompt não mudou as principais métricas do A/B, já que v1 e v2 tiveram os mesmos 78% de contenção, 9% de
+fallback e 22% de handoff, o que faz sentido porque, na rodada 2, 83% das intenções foram resolvidas pelas regras e
+pelo código, e no próprio A/B o LLM classificou só 5 de 78 turnos (`ab_20261003_1849.md`). Isso é positivo para um
+bot de oficina porque aumenta a previsibilidade, reduz o uso e o custo do LLM e facilita os testes, enquanto o
+prompt continua importante para controlar a qualidade e a forma das respostas. As melhorias reais vieram das
+mudanças no código e na base, com o fallback caindo de 9% para 6% e o acerto das paráfrases subindo de 50% para
+100%.
 
 ## 5. Proposta de melhoria
 
-✏️ Uma mudança concreta, ligada ao insight da seção 4, no formato do loop de otimização da Aula 4:
-
-- **Problema observado:**
-- **Mudança proposta:** (no arquivo `______`)
-- **Métrica que deve mudar e quanto esperamos:**
-- **Como vamos medir:** (qual conversa ou script rodar de novo)
+- **Problema observado:** os exemplos do prompt v2 terminam com ofertas que podem levar o modelo a inventar
+  informações. Na última medição com juiz (01/10), a nota de fidelidade foi 4,39 na v1 e 4,56 na v2.
+- **Mudança proposta:** como próximo passo, nós retiraríamos dos exemplos do prompt v2 as ofertas que podem levar
+  o modelo a inventar informações (no arquivo `backend/prompts/system_prompt.md`, seção 5, Exemplos).
+- **Métrica que deve mudar e quanto esperamos:** a nota de fidelidade do juiz no A/B, de 4,56 para pelo menos 4,8
+  na v2.
+- **Como vamos medir:** `python scripts/ab_test.py --julgar --juiz groq:qwen/qwen3.8-27b`, na pasta `backend/`
+  e com o backend rodando, em mais de uma rodada, porque a nota do juiz variou entre execuções (4,50 × 4,22 numa
+  rodada e 4,39 × 4,56 na seguinte).
