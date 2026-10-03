@@ -98,8 +98,10 @@ Códigos: 200/201 sucesso, 401 chave ausente ou errada, 404 `session_id` inexist
 **Frontend:** Streamlit (chat, raio-X, métricas), Plotly, httpx. **Segunda lente:** Gradio.
 
 **Modelo:** `openai/gpt-oss-120b` no **Groq** como modelo principal, com o Gemini `gemini-3.5-flash-lite` como
-**reserva** (assume se o Groq falhar) e como **juiz** do LLM-as-judge, por ser de outra empresa. Trocar de provedor
-é mudar `LLM_PROVIDER` no `.env`. O provedor `mock` roda sem chave e sem internet: é o que os testes usam.
+**reserva** (assume se o Groq falhar). O **juiz** do LLM-as-judge no A/B publicado foi o `qwen/qwen3.8-27b`
+(família Qwen, da Alibaba), rodando no Groq: mesmo provedor do bot, mas família de modelo diferente. O juiz
+automático do código (`--juiz auto`) escolheria o Gemini, mas a cota gratuita dele não comportava as 36
+avaliações, por isso usamos o Qwen. Trocar de provedor é mudar `LLM_PROVIDER` no `.env`. O provedor `mock` roda sem chave e sem internet: é o que os testes usam.
 
 **Como chegamos aqui.** O MVP do Build Day usava Gemini Flash. No primeiro teste real (01/10/2026) o alias
 `gemini-flash-latest` apontava para um modelo com cota gratuita de 20 requisições e respondia 503 por excesso

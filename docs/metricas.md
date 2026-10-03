@@ -5,7 +5,9 @@
 ## 1. Como os dados foram gerados
 
 - **Modelo:** `openai/gpt-oss-120b` no Groq (bot), `gemini-3.5-flash-lite` como reserva, `qwen/qwen3.8-27b` no
-  Groq como juiz. Prompt v2 (cinco camadas) nas conversas manuais.
+  Groq como juiz (família Qwen, da Alibaba: mesmo provedor do bot, família de modelo diferente). O juiz automático
+  do código (`--juiz auto`) escolheria o Gemini, mas a cota gratuita dele não comportava as 36 avaliações, por isso
+  usamos o Qwen. Prompt v2 (cinco camadas) nas conversas manuais.
 - **Conversas manuais (seção 2):** 10 conversas em 02/10/2026, feitas por um integrante interpretando 10 perfis de
   aluno, com a nota de CSAT dada do ponto de vista de cada perfil (método e mensagens em `perfis_conversas.md`).
   Uma rodada anterior encontrou 15 problemas, todos corrigidos antes desta (`rodada1_achados.md`).

@@ -44,6 +44,9 @@ python scripts/llm_judge.py --sessao <session_id>
   extrapolava a FAQ. O relatório lista as conversas com nota ≤ 3 e o trecho problemático.
 - O juiz usa **o provedor oposto ao do bot** (`--juiz auto`, o padrão: com o bot no Groq, o juiz é o Gemini),
   para o modelo não julgar a si mesmo. Dá para escolher outro: `--juiz groq:qwen/qwen3.8-27b`.
+- No A/B publicado em `docs/metricas.md` o juiz foi o `qwen/qwen3.8-27b` (família Qwen, da Alibaba) no Groq:
+  mesmo provedor do bot (`openai/gpt-oss-120b`), mas família de modelo diferente. O `--juiz auto` escolheria o
+  Gemini, mas a cota gratuita dele não comportava as 36 avaliações.
 - Antes de rodar, `python scripts/diagnostico_llm.py groq` e `... gemini` mostram se cada provedor está no ar.
 - Os relatórios vão para `scripts/resultados/ab_<data>.md` (tabela) e `.json` (transcrições completas).
 - Os scripts **não enviam CSAT**: nota de satisfação só vem de pessoas reais, pela tela.
