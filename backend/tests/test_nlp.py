@@ -148,3 +148,11 @@ def test_injection_imperativo_informal():
     for frase in ["o que é guardrail?", "como o bot finge empatia sem mentir?", "quero falar com o professor",
                   "seja sincera, o slot é importante?", "como faço o bot virar um agente?"]:
         assert checar_entrada(frase, 500).tipo != "prompt_injection", frase
+
+
+def test_caixa_alta_sozinha_nao_e_frustracao():
+    """Achado no print 02b (03/10): mensagem neutra em maiúsculas recebia acolhimento de frustração."""
+    assert analisar_sentimento("QUERO AGENDAR UM PLANTAO").label == "neutro"
+    assert analisar_sentimento("O QUE É SLOT?").label == "neutro"
+    assert analisar_sentimento("NÃO ENTENDI NADA").label == "negativo"
+    assert analisar_sentimento("NÃO ENTENDI NADA").score > analisar_sentimento("não entendi nada").score

@@ -53,7 +53,9 @@ def analisar_sentimento(texto: str) -> Sentimento:
     if texto.count("!") >= 2 or texto.count("?") >= 3:
         neg += 0.5 if neg > 0 else 0
     letras = [c for c in texto if c.isalpha()]
-    if len(letras) >= 8 and sum(c.isupper() for c in letras) / len(letras) > 0.7:
+    # caixa alta só REFORÇA uma negatividade que já existe ("NÃO ENTENDI NADA"); sozinha não é grito
+    # (achado no print 02b, 03/10: "QUERO AGENDAR UM PLANTAO" era lido como frustração)
+    if neg > 0 and len(letras) >= 8 and sum(c.isupper() for c in letras) / len(letras) > 0.7:
         neg += 1.0
 
     saldo = pos - neg
