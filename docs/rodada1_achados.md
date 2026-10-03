@@ -27,8 +27,8 @@ rodada 2 (`metricas.md`).
 | 15 | Gabi | Funcionou: o estado sobreviveu ao cancelamento e a remarcação pulou os dados já informados | — | Sugestão em aberto: avisar "seus dados continuam guardados" |
 
 Depois das correções pontuais, a cobertura de linguagem foi ampliada de forma sistemática: 11 categorias e cerca de
-580 expressões em `data/variacoes.json`, sinônimos e conjugações nas palavras-chave da FAQ, e uma bateria de 121
-frases escritas de forma livre (`tests/test_variacoes.py`). Com isso, o roteiro de 18 conversas do A/B passou a 100%
+580 expressões em `data/variacoes.json`, sinônimos e conjugações nas palavras-chave da FAQ, e uma bateria de 119
+frases (121 testes) escritas de forma livre (`tests/test_variacoes.py`). Com isso, o roteiro de 18 conversas do A/B passou a 100%
 também nas paráfrases, e a taxa de fallback do roteiro caiu de 9% para 6%.
 
 **Em aberto (não corrigido de propósito):** em todas as rodadas, as respostas da FAQ terminam com ofertas criadas
