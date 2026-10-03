@@ -130,9 +130,14 @@ A disciplina recomenda modelo local (Ollama). ✏️ (uma frase do grupo explica
 exemplo, o hardware disponível. O acesso ao modelo está isolado em `llm/client.py`, então trocar para um endpoint
 local compatível com a API da OpenAI exige só uma nova entrada no dicionário de provedores.)
 
-**Limites do plano gratuito** (valem por projeto ou organização, não por chave):
-- Groq, `openai/gpt-oss-120b`: ✏️ ___ requisições por minuto e ___ por dia (conferir em https://console.groq.com/settings/limits).
-- Gemini, `gemini-3.5-flash-lite`: ✏️ ___ requisições por minuto e ___ por dia (conferir em https://ai.dev/rate-limit; a [página oficial](https://ai.google.dev/gemini-api/docs/rate-limits) avisa que os valores mudam por modelo).
+**Limites do plano gratuito** (valem por projeto ou organização, não por chave; consultados nos consoles em 03/10/2026):
+- Groq, `openai/gpt-oss-120b`: 30 requisições por minuto, 1.000 por dia, 8.000 tokens por minuto e 200.000
+  tokens por dia (fonte: https://console.groq.com/settings/limits).
+- Gemini, `gemini-3.5-flash-lite`: 15 requisições por minuto, 500 por dia e 250.000 tokens por minuto (fonte:
+  https://aistudio.google.com/rate-limit; a [página oficial](https://ai.google.dev/gemini-api/docs/rate-limits)
+  avisa que os valores mudam por modelo). Na mesma consulta, os modelos Gemini Flash sem "lite" (2.5, 3 e 3.5)
+  tinham limite de 20 requisições por dia, o que explica a cota estourada no primeiro teste real com o alias
+  `gemini-flash-latest`.
 - **Resiliência:** em 503, 429 ou timeout o backend espera e tenta de novo (`LLM_RETRIES`). Se o provedor
   continuar fora, a mesma chamada vai para o reserva (`LLM_FALLBACK_PROVIDER=gemini`). Só se os dois falharem
   a API devolve 503, e a tela mostra que o modelo está indisponível. O 503 *high demand* do Gemini no nosso
