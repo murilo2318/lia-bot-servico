@@ -124,8 +124,8 @@ Usamos versões fixas de propósito: um alias "-latest" troca de modelo, e de co
   dia, e foi isso que decidiu o modelo principal. Por turno, nas conversas manuais, a média ficou em 297 ms e o
   p95 em 1,1 s, porque 83% das intenções foram resolvidas por regra, sem chamar o modelo (`docs/metricas.md`).
 - **Qualidade em português:** O gpt-oss-120b apresentou uma qualidade muito boa em português, entendendo
-  linguagem informal (acertou 8 de 10 paráfrases informais com o modelo real) e produzindo respostas naturais e
-  adequadas ao tom, melhor do que esperávamos em relação aos modelos menores que vimos no primeiro semestre,
+  linguagem informal (com o modelo real, o sistema acertou 8 de 10 paráfrases informais, 7 delas entendidas pelo
+  próprio modelo) e produzindo respostas naturais e adequadas ao tom, melhor do que esperávamos em relação aos modelos menores que vimos no primeiro semestre,
   embora ainda tenha mostrado limitações de fidelidade à base e alguns vícios de formatação e oferta de
   conteúdo.
 
