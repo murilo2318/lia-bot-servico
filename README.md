@@ -123,12 +123,17 @@ Usamos versões fixas de propósito: um alias "-latest" troca de modelo, e de co
 - **Latência observada:** o Groq respondeu entre 1,6 e 4,6 s por chamada, contra 7 a 15 s do Gemini no mesmo
   dia, e foi isso que decidiu o modelo principal. Por turno, nas conversas manuais, a média ficou em 297 ms e o
   p95 em 1,1 s, porque 83% das intenções foram resolvidas por regra, sem chamar o modelo (`docs/metricas.md`).
-- **Qualidade em português:** ✏️ (uma frase do grupo, comparando com a discussão de modelos em PT do 1º semestre
-  e com o que o juiz e as conversas mostraram).
+- **Qualidade em português:** O gpt-oss-120b apresentou uma qualidade muito boa em português, entendendo
+  linguagem informal (acertou 8 de 10 paráfrases informais com o modelo real) e produzindo respostas naturais e
+  adequadas ao tom, melhor do que esperávamos em relação aos modelos menores que vimos no primeiro semestre,
+  embora ainda tenha mostrado limitações de fidelidade à base e alguns vícios de formatação e oferta de
+  conteúdo.
 
-A disciplina recomenda modelo local (Ollama). ✏️ (uma frase do grupo explicando por que optaram pela API, por
-exemplo, o hardware disponível. O acesso ao modelo está isolado em `llm/client.py`, então trocar para um endpoint
-local compatível com a API da OpenAI exige só uma nova entrada no dicionário de provedores.)
+A disciplina recomenda modelo local (Ollama). Optamos pela API porque ela permitiu usar um modelo muito mais
+capaz do que conseguiríamos rodar localmente em um notebook comum, com boa velocidade, sem custo na camada
+gratuita e sem exigir instalação pesada para o professor, mantendo ainda a arquitetura preparada para trocar
+futuramente para Ollama se houver hardware adequado. O acesso ao modelo está isolado em `llm/client.py`, então
+trocar para um endpoint local compatível com a API da OpenAI exige só uma nova entrada no dicionário de provedores.
 
 **Limites do plano gratuito** (valem por projeto ou organização, não por chave; consultados nos consoles em 03/10/2026):
 - Groq, `openai/gpt-oss-120b`: 30 requisições por minuto, 1.000 por dia, 8.000 tokens por minuto e 200.000
