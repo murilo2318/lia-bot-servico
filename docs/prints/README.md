@@ -1,21 +1,18 @@
 # Prints
 
-✏️ Salvem aqui as capturas de tela em PNG, com os nomes abaixo. Ao terminar, atualizem a coluna "Situação".
+Capturas de tela da entrega. O enunciado exige print do `/docs` (F2, "print ou vídeo") e das três áreas da
+interface (F4: chat, raio-X e métricas). Os demais itens aparecem no vídeo (`docs/roteiro_video.md`).
 Não salvem nesta pasta capturas do `.env` nem de outros repositórios.
 
-Situação em 03/10/2026: esta pasta ainda não tem nenhum print. Três capturas da lista já existem, mas estão em
-`docs/` com o nome dado pelo macOS; falta movê-las para cá e renomeá-las.
-
-| Arquivo | O que mostrar | Requisito | Situação |
+| Arquivo | O que mostra | Requisito | Situação |
 |---|---|---|---|
-| `01_docs.png` | `/docs` com a lista de rotas e o botão Authorize | F2 | capturado: `docs/Captura de Tela 2026-10-02 às 3.38.06 PM.png`; falta mover e renomear |
-| `02_chat_raio_x.png` | Chat no meio do T1, com os slots no raio-X | F4, R4 | falta |
-| `03_handoff.png` | Resumo do handoff no raio-X (T7) | R6, R7 | capturado: `docs/Captura de Tela 2026-10-02 às 10.12.00 AM.png`; falta mover e renomear |
-| `04_metricas.png` | Página de métricas com as quatro obrigatórias | F4, R8 | capturado: `docs/Captura de Tela 2026-10-02 às 3.37.25 PM.png`; falta mover e renomear |
-| `04b_metricas.png` | Opcional: parte de baixo da página de métricas (gráficos extras) | F4 | opcional, falta |
-| `05_api_desligada.png` | Front com o backend parado, mostrando a mensagem amigável | F3 | falta |
+| `01_docs.png` | `/docs` com o título, o botão Authorize e a lista de rotas | F2 | ok |
+| `01b_docs_schemas.png` | `/docs` rolado até a seção Schemas (modelos Pydantic) | F2 | ok |
+| `02_chat_raio_x.png` | Chat no fim do T1, com os seis slots preenchidos no raio-X e o modelo em uso | F4, R4 | ok |
+| `02b_chat_raio_x.png` | Chat no início do T1, com o caminho da decisão no raio-X (etapa "Fluxo de agendamento") | F4, R4 | ok |
+| `03_handoff.png` | Resumo do handoff no raio-X (T7) | R6, R7 | mostrado no vídeo |
+| `04_metricas.png` | Página de métricas, parte de cima: as quatro obrigatórias e o CSAT cruzado (rodada 2) | F4, R8 | ok |
+| `04b_metricas.png` | Página de métricas, parte de baixo (custo, fallbacks, comparação A/B) | F4 | opcional, falta |
+| `05_api_desligada.png` | Front com o backend parado, mostrando a mensagem amigável | F3 | mostrado no vídeo |
 | `06_painel_professor.png` | Painel Gradio com a fila de handoffs | Diferencial | falta |
-| `07_t8_docs.png` | `POST /chat` pelo `/docs` com o session_id da tela | T8 | falta |
-
-Captura fora da lista: `docs/Captura de Tela 2026-10-02 às 3.38.12 PM.png` mostra a parte de baixo do `/docs`
-(seção Schemas). Pode virar um `01b_docs.png` opcional ou ficar de fora.
+| `07_t8_docs.png` | `POST /chat` pelo `/docs` com o session_id da tela | T8 | mostrado no vídeo |
