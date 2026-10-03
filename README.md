@@ -2,13 +2,11 @@
 
 Checkpoint integrado de Front-end e PLN · FIAP · 2º semestre de 2026
 
-> Os trechos marcados com ✏️ precisam ser preenchidos pelo grupo antes da entrega.
-
 ## 1. Integrantes
 
 | Nome | RM |
 |---|---|
-| Murilo Benhossi | 562358 |
+| Murilo de Faria Benhossi | 562358 |
 | Nicolas Lemos Ribeiro | 553273 |
 | Ricardo de Paiva Melo | 565522 |
 | Luís Fernando de Oliveira Salgado | 561401 |
@@ -296,15 +294,16 @@ da janela: no T3, o horário marcado dez turnos antes vem dos slots, guardados n
 
 ## 9. Divisão de responsabilidades
 
-✏️
-
 | Integrante | Responsabilidade |
 |---|---|
-| | |
+| Murilo de Faria Benhossi | Responsável principal pelo desenvolvimento técnico e pela integração do projeto. Atuou na definição da arquitetura da solução, implementação do backend em FastAPI, persistência em SQLite, gerenciamento de estado e memória, regras de decisão, guardrails, handoff, integração com os modelos de linguagem, desenvolvimento e integração das interfaces, métricas, testes, análise dos resultados e evolução das versões do sistema. |
+| Pedro Leal Murad | Contribuiu na revisão dos requisitos e dos fluxos de atendimento da Lia, auxiliando na discussão dos cenários de uso, temas atendidos pela FAQ e comportamentos esperados para respostas automáticas, fallback e encaminhamento ao professor. |
+| Nicolas Lemos Ribeiro | Contribuiu na revisão funcional e na experiência de uso do chatbot, avaliando a clareza das respostas, a compreensão das interações e possíveis situações de uso que poderiam exigir ajustes no comportamento da Lia. |
+| Ricardo de Paiva Melo | Contribuiu na revisão e interpretação dos resultados obtidos durante a avaliação do sistema, auxiliando na organização e discussão de métricas como contenção, fallback, handoff e qualidade das respostas. |
+| Luís Fernando de Oliveira Salgado | Responsável pelo desenvolvimento da versão original da Lia utilizada como ponto de partida no Build Day, incluindo o repositório inicial, a FAQ e parte das regras posteriormente adaptadas para a nova arquitetura. Também contribuiu para a revisão da documentação e organização do conteúdo utilizado na apresentação do projeto. |
+| Jonas Alaf | Contribuiu na revisão da experiência do usuário e da consistência das respostas da Lia, avaliando clareza, tom, facilidade de uso do chat e possíveis pontos de confusão durante a interação, além de sugerir ajustes na apresentação das respostas e no fluxo de atendimento. |
 
 ## 10. Uso de IA generativa
-
-✏️ Revisem e ajustem este texto para refletir exatamente o que aconteceu.
 
 O grupo usou o **Claude (Anthropic)** como apoio em:
 - análise do enunciado e do repositório do Build Day, e proposta da arquitetura;
@@ -312,7 +311,7 @@ O grupo usou o **Claude (Anthropic)** como apoio em:
 - escrita dos testes automatizados e revisão dos diálogos do bot;
 - rascunho deste README e da ficha do bot.
 
-✏️ O grupo também usou o **ChatGPT (OpenAI)** para revisar a arquitetura e propor a melhoria do classificador.
+O grupo também usou o **ChatGPT (OpenAI)** para revisar a arquitetura e propor a melhoria do classificador.
 
 O grupo validou a arquitetura antes da implementação, executou o sistema com o modelo real, rodou os testes
 T1–T8 e as conversas de avaliação, e escreveu a leitura crítica e a proposta de melhoria do `docs/metricas.md`.
