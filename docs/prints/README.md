@@ -1,7 +1,7 @@
 # Prints
 
 Capturas de tela da entrega. O enunciado exige print do `/docs` (F2, "print ou vídeo") e das três áreas da
-interface (F4: chat, raio-X e métricas). Os demais itens aparecem no vídeo (`docs/roteiro_video.md`).
+interface (F4: chat, raio-X e métricas). Os demais itens aparecem no vídeo.
 Não salvem nesta pasta capturas do `.env` nem de outros repositórios.
 
 | Arquivo | O que mostra | Requisito | Situação |
