@@ -202,7 +202,7 @@ Abre em http://localhost:7860.
 
 ```bash
 cd backend
-python -m pytest -q                        # 251 testes, incluindo T1–T8, sem chave e sem internet
+python -m pytest -q                        # 252 testes, incluindo T1–T8, sem chave e sem internet
 python scripts/ab_test.py --julgar         # A/B v1 × v2 com LLM-as-judge (backend rodando)
 ```
 
