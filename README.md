@@ -1,5 +1,7 @@
 # Lia — Bot como Serviço
 
+Vídeo da demonstração: https://youtu.be/vv-9UE9ew3I
+
 Checkpoint integrado de Front-end e PLN · FIAP · 2º semestre de 2026
 
 ## 1. Integrantes
